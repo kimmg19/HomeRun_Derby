@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Ball : MonoBehaviour
+{
+    PitchTypeDataSO pitchTypeDataSO;
+    int speed;
+    Vector3 offset1;
+    Vector3 offset2;
+    public void Init(PitchTypeDataSO pitchTypeDataSO, int speed, Vector3 startPoint, Vector3 endPoint)
+    {
+        this.pitchTypeDataSO = pitchTypeDataSO;
+        this.speed = speed;
+        offset1 = pitchTypeDataSO.offset1;
+        offset2 = pitchTypeDataSO.offset2;
+
+        StartCoroutine(ApplyPitchMovement(startPoint,offset1,offset2,endPoint));
+    }
+    IEnumerator ApplyPitchMovement(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
+    {
+        float duration = 1.0f; // 총 이동 시간(초)
+        float speedFactor = speed / 100.0f; // 속도 계수 (높을수록 빠름)
+
+        // 총 이동 시간을 속도에 따라 조정
+        duration = duration / speedFactor; // 속도가 높을수록 시간은 짧아짐
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            // 경과 시간을 전체 시간으로 나누어 0~1 사이 값 계산
+            float t = elapsedTime / duration;
+
+            // 베지어 곡선을 따라 위치 계산
+            gameObject.transform.position = BezierUtils.Bezier(p1, p2, p3, p4,t);
+
+            // 시간 업데이트
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+        
+        gameObject.transform.position = p4;
+    }
+
+}
