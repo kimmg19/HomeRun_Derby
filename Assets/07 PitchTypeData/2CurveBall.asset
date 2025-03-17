@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pitchType: 1
   speedMultiplier: 1.2
+  offset1: {x: -0.5, y: 0.7, z: -5.5}
+  offset2: {x: -0.15, y: 0.3, z: -7}

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pitchType: 0
   speedMultiplier: 1.4
-  offset1: {x: -0.4985216, y: 0.5028713, z: -5.267927}
-  offset2: {x: -0.4936417, y: 0.3770906, z: -6.739796}
+  offset1: {x: 0, y: 0.3, z: -5}
+  offset2: {x: 0, y: 0.3, z: -7}

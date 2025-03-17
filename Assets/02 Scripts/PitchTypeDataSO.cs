@@ -4,18 +4,24 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Pitch", menuName = "PitchType")]
-public class PitchTypeDataSO : ScriptableObject
+public class PitchTypeDataSO : ScriptableObject, IPitchData
 {
-    //enum가져오기.
+    
     [Header("구종 설정")]
     [SerializeField] PitchType pitchType;
-    public float BaseSpeed { get; } = 100f;//모든 구종의 기본 속도.
-    public float speedMultiplier = 1.4f;    //구종별 기본 속도 설정값.
-    public Vector3 offset1;
-    public Vector3 offset2;
+    [Tooltip("구속 배율")]
+    [SerializeField] float speedMultiplier = 1.4f;
+    [Tooltip("첫 번째 제어점")]
+    [SerializeField] Vector3 offset1; 
+    [Tooltip("두 번째 제어점")]
+    [SerializeField] Vector3 offset2; 
 
+    private const float DEFAULT_SPEED = 100f;
+    public float BaseSpeed => DEFAULT_SPEED;
 
-    //so는 데이터 저장소이기 때문에 프로퍼티로 speed 를 사용하는 거보다 controller에서 로직을 짜는 방식으로
-    //public float speed;
+    public PitchType Type => pitchType;
+    public float SpeedMultiplier => speedMultiplier;
+    public Vector3 Offset1 => offset1;
+    public Vector3 Offset2 => offset2;
 
 }

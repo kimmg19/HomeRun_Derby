@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    PitchTypeDataSO pitchTypeDataSO;
     int speed;
     Vector3 offset1;
     Vector3 offset2;
-    public void Init(PitchTypeDataSO pitchTypeDataSO, int speed, Vector3 startPoint, Vector3 endPoint)
+    public void Init(IPitchData iPitchData, int speed, Vector3 startPoint, Vector3 endPoint)
     {
-        this.pitchTypeDataSO = pitchTypeDataSO;
         this.speed = speed;
-        offset1 = pitchTypeDataSO.offset1;
-        offset2 = pitchTypeDataSO.offset2;
+        offset1 = iPitchData.Offset1;
+        offset2 = iPitchData.Offset2;
 
         StartCoroutine(ApplyPitchMovement(startPoint,offset1,offset2,endPoint));
     }
