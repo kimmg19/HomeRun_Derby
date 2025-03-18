@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    int speed;
-    Vector3 offset1;
-    Vector3 offset2;
+    int speed;     
     public void Init(IPitchData iPitchData, int speed, Vector3 startPoint, Vector3 endPoint)
     {
         this.speed = speed;
-        offset1 = iPitchData.Offset1;
-        offset2 = iPitchData.Offset2;
+        Vector3 offset1 = startPoint+iPitchData.Offset1;
+        Vector3 offset2 = endPoint+ iPitchData.Offset2;
 
         StartCoroutine(ApplyPitchMovement(startPoint,offset1,offset2,endPoint));
     }
@@ -33,7 +31,7 @@ public class Ball : MonoBehaviour
             // 베지어 곡선을 따라 위치 계산
             gameObject.transform.position = BezierUtils.Bezier(p1, p2, p3, p4,t);
 
-            // 시간 업데이트
+            
             elapsedTime += Time.deltaTime;
 
             yield return null;
