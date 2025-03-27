@@ -9,12 +9,12 @@ using static PitchingManager;
 public class StrikeZoneManager : MonoBehaviour
 {
     [Header("포구 위치")]
-    [SerializeField] Transform end_Point;
+    public Transform end_Point;
     //[Header("존 넓이")]
-    const float strikeZoneHalfHeight = 0.07f;
-    const float strikeZoneHalfWidth = 0.065f;
-    const float ballZoneHalfHeight = 0.09f;
-    const float ballZoneHalfWidth = 0.075f;
+    const float strikeZoneHalfHeight = 0.2f;
+    const float strikeZoneHalfWidth = 0.18f;
+    const float ballZoneHalfHeight = 0.15f;
+    const float ballZoneHalfWidth = 0.15f;
 
     enum BallZone
     {
@@ -23,18 +23,18 @@ public class StrikeZoneManager : MonoBehaviour
         Left,
         Right
     }
-    public Vector3 SetPitchingPoint(PitchPosition pitchPosition)
+    public Vector3 SetPitchingPoint(EPitchPosition pitchPosition)
     {
         switch (pitchPosition)
         {
-            case PitchPosition.Strike:
+            case EPitchPosition.Strike:
                 {
+                    Debug.Log("스트라이크");
                     return GetStrikePosition();
                 }
-            case PitchPosition.Ball:
+            case EPitchPosition.Ball:
                 {
                     Debug.Log("볼");
-
                     return GetBallPosition((BallZone)Random.Range(0, 4));
                 }
             default: return GetStrikePosition();
@@ -42,7 +42,7 @@ public class StrikeZoneManager : MonoBehaviour
     }
     Vector3 GetStrikePosition()
     {
-        // 공통 위치를 캐싱하여 코드 단순화
+        
         Vector3 center = end_Point.position;
 
         return new Vector3(
@@ -53,7 +53,6 @@ public class StrikeZoneManager : MonoBehaviour
     }
     Vector3 GetBallPosition(BallZone zone)
     {
-        // 공통 위치를 캐싱하여 코드 단순화
         Vector3 center = end_Point.position;
 
         switch (zone)
@@ -86,7 +85,7 @@ public class StrikeZoneManager : MonoBehaviour
                     center.z
                 );
 
-            default:                
+            default:
                 return GetStrikePosition();
         }
     }
@@ -95,9 +94,9 @@ public class StrikeZoneManager : MonoBehaviour
         if (end_Point == null) return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawCube(end_Point.position, new Vector3(strikeZoneHalfWidth * 2, strikeZoneHalfHeight * 2, 0.01f));
+        Gizmos.DrawCube(end_Point.position ,new Vector3(strikeZoneHalfWidth * 2, strikeZoneHalfHeight * 2, 0.01f));
 
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.green;         
         Gizmos.DrawWireCube(
             end_Point.position,
             new Vector3(strikeZoneHalfWidth * 2 + ballZoneHalfWidth, strikeZoneHalfHeight * 2 + ballZoneHalfHeight, 0.01f)
