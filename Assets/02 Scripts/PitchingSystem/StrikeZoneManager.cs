@@ -1,20 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
 using UnityEngine;
-using static PitchingManager;
 
-//투구 위치.
-//현재는 그냥 볼 위치에 공을 던지는데 구종별로 던지는 위치 다르게 해도 좋을 듯. 확률적으로 던질 위치를 정해주는 거지.
+/// <summary>
+/// 스트라이크 존 관리 클래스
+/// 투구의 목표 위치를 설정하고 시각화합니다.
+/// </summary>
 public class StrikeZoneManager : MonoBehaviour
 {
     [Header("포구 위치")]
-    public Transform end_Point;
-    //[Header("존 넓이")]
-    const float strikeZoneHalfHeight = 0.2f;
-    const float strikeZoneHalfWidth = 0.18f;
-    const float ballZoneHalfHeight = 0.15f;
-    const float ballZoneHalfWidth = 0.15f;
+    [SerializeField] Transform catchPoint;
+
+    [Header("존 설정")]
+    [SerializeField, Range(0.05f, 0.2f)] float strikeZoneHalfHeight = 0.1f;
+    [SerializeField, Range(0.05f, 0.2f)] float strikeZoneHalfWidth = 0.1f;
+    [SerializeField, Range(0.1f, 0.3f)] float ballZoneHalfHeight = 0.2f;
+    [SerializeField, Range(0.1f, 0.3f)] float ballZoneHalfWidth = 0.18f;
 
     enum BallZone
     {
@@ -23,27 +22,35 @@ public class StrikeZoneManager : MonoBehaviour
         Left,
         Right
     }
+
+    /// <summary>
+    /// 투구 위치를 설정합니다.
+    /// </summary>
+    /// <param name="pitchPosition">스트라이크/볼 여부</param>
+    /// <returns>투구 목표 좌표</returns>
     public Vector3 SetPitchingPoint(EPitchPosition pitchPosition)
     {
         switch (pitchPosition)
         {
             case EPitchPosition.Strike:
-                {
-                    Debug.Log("스트라이크");
-                    return GetStrikePosition();
-                }
+                Debug.Log("스트라이크");
+                return GetStrikePosition();
+
             case EPitchPosition.Ball:
-                {
-                    Debug.Log("볼");
-                    return GetBallPosition((BallZone)Random.Range(0, 4));
-                }
-            default: return GetStrikePosition();
+                Debug.Log("볼");
+                return GetBallPosition((BallZone)Random.Range(0, 4));
+
+            default:
+                return GetStrikePosition();
         }
     }
+
+    /// <summary>
+    /// 스트라이크 존 내의 랜덤 위치를 반환합니다.
+    /// </summary>
     Vector3 GetStrikePosition()
     {
-        
-        Vector3 center = end_Point.position;
+        Vector3 center = catchPoint.position;
 
         return new Vector3(
             Random.Range(center.x - strikeZoneHalfWidth, center.x + strikeZoneHalfWidth),
@@ -51,9 +58,13 @@ public class StrikeZoneManager : MonoBehaviour
             center.z
         );
     }
+
+    /// <summary>
+    /// 볼 존의 특정 영역(상/하/좌/우)에서 랜덤 위치를 반환합니다.
+    /// </summary>
     Vector3 GetBallPosition(BallZone zone)
     {
-        Vector3 center = end_Point.position;
+        Vector3 center = catchPoint.position;
 
         switch (zone)
         {
@@ -89,18 +100,26 @@ public class StrikeZoneManager : MonoBehaviour
                 return GetStrikePosition();
         }
     }
+
+    /// <summary>
+    /// 스트라이크 존과 볼 존을 시각적으로 표시합니다.
+    /// </summary>
     void OnDrawGizmos()
     {
-        if (end_Point == null) return;
+        if (catchPoint == null) return;
 
+        // 스트라이크 존 (빨간색 큐브)
         Gizmos.color = Color.red;
-        Gizmos.DrawCube(end_Point.position ,new Vector3(strikeZoneHalfWidth * 2, strikeZoneHalfHeight * 2, 0.01f));
+        Gizmos.DrawCube(catchPoint.position,
+            new Vector3(strikeZoneHalfWidth * 2, strikeZoneHalfHeight * 2, 0.01f));
 
-        Gizmos.color = Color.green;         
+        // 볼 존 (초록색 와이어 큐브)
+        Gizmos.color = Color.green;
         Gizmos.DrawWireCube(
-            end_Point.position,
-            new Vector3(strikeZoneHalfWidth * 2 + ballZoneHalfWidth, strikeZoneHalfHeight * 2 + ballZoneHalfHeight, 0.01f)
+            catchPoint.position,
+            new Vector3(strikeZoneHalfWidth * 2 + ballZoneHalfWidth,
+                       strikeZoneHalfHeight * 2 + ballZoneHalfHeight,
+                       0.01f)
         );
     }
-
 }
