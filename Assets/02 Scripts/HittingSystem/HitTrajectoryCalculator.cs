@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 // 타격 궤적 계산기 - 베지어 곡선 및 타격 방향 계산 담당
-public class HitTrajectoryCalculator
+public class HitTrajectoryCalculator :MonoBehaviour
 {
     // 베지어 곡선 제어점 계산
     public void CalculateTrajectory(Vector3 startPoint, float angle, float distance, float height,
@@ -21,7 +21,7 @@ public class HitTrajectoryCalculator
         // 제어점 계산
         offset1 = startPoint + new Vector3(
             direction.x * distance * 0.3f,
-            height,
+            height * 0.5f,
             direction.z * distance * 0.3f
         );
 
@@ -35,7 +35,7 @@ public class HitTrajectoryCalculator
         endPoint = startPoint + direction * distance;
     }
 
-    // 타이밍에 따른 각도 계산
+    // 타이밍에 따른 방향 계산
     public float CalculateHitAngle(EHitTiming timing)
     {
         switch (timing)

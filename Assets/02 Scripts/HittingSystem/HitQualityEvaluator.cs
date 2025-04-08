@@ -1,7 +1,7 @@
 // 타격 품질 평가기 - 타이밍 및 품질 판정 담당
 using UnityEngine;
 
-public class HitQualityEvaluator
+public class HitQualityEvaluator : MonoBehaviour 
 {
     // 타격 품질 계산
     public EHitTiming EvaluateHitQuality(float distance)

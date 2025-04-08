@@ -357,7 +357,9 @@ GameObject:
   - component: {fileID: 6807128815785749087}
   - component: {fileID: 3709131739143261000}
   - component: {fileID: 3008250180803967357}
-  - component: {fileID: 7962970280580339925}
+  - component: {fileID: 5651731419020987043}
+  - component: {fileID: 8518433062465719424}
+  - component: {fileID: 7115507734074076787}
   m_Layer: 0
   m_Name: Hitter
   m_TagString: Untagged
@@ -420,7 +422,9 @@ MonoBehaviour:
   hittingPoint: {fileID: 2257633521027708432}
   baseDistance: 40
   maxHeight: 15
---- !u!114 &7962970280580339925
+  playerManager: {fileID: 0}
+  animator: {fileID: 0}
+--- !u!114 &5651731419020987043
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -429,27 +433,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 965021543707205259}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Script: {fileID: 11500000, guid: 98e7cbf1943b5084ab0574ac75f664a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: b93f9376242b2d540a3cecbcf4cbf9ac, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+--- !u!114 &8518433062465719424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965021543707205259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d903315523df04fbbaaa5970c5a379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7115507734074076787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965021543707205259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 827f10fd35ea1bf4caff80748645432b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1339379934569872072
 GameObject:
   m_ObjectHideFlags: 0
@@ -2578,6 +2588,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -82.881
       objectReference: {fileID: 0}
+    - target: {fileID: 8590877152339676324, guid: 903c43007ef77274bad19ed037b02892, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9b84d96edec3e074a96ccba10ae0bf43, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

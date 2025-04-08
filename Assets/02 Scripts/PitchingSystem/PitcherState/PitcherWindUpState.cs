@@ -8,7 +8,7 @@ public class PitcherWindUpState : IPitcherState
     {
         //Debug.Log("투수 와인드업");
         pitcher.animator.SetTrigger("WindUp");
-        pitcher.onWindUpStart?.Invoke();
+        HomerunDerbyManager.Instance.TriggerWindUpStart();
     }
 
     public void Update(PitcherManager pitcher)

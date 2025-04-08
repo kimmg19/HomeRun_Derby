@@ -6,6 +6,8 @@ public class PitcherThrowState : IPitcherState
 {
     public void Enter(PitcherManager pitcher)
     {
+        pitcher.eState = PitchState.Throw;
+
         //Debug.Log("≈ı±∏");
         pitcher.ExecutePitch();
     }
