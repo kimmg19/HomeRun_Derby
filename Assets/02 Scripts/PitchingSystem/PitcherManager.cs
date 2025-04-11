@@ -18,7 +18,6 @@ public class PitcherManager : MonoBehaviour
     StrikeZoneManager strikeZoneManager;
     BallSpeedManager ballSpeedManager;
     ObjectPoolManager poolManager;
-    HitterManager hitterManager;
 
     // 투구 데이터
     Ball ball;
@@ -29,7 +28,7 @@ public class PitcherManager : MonoBehaviour
 
     // 상태 관리
     IPitcherState current_IState;
-    public PitchState eState;
+    public PitchState EState { get; set; }
     PitcherIdleState idleState;
     PitcherReadyState readyState;
     PitcherWindUpState windUpState;
@@ -37,7 +36,6 @@ public class PitcherManager : MonoBehaviour
 
     void Awake()
     {
-        hitterManager = FindObjectOfType<HitterManager>();
         strikeZoneManager = GetComponent<StrikeZoneManager>();
         ballSpeedManager = GetComponent<BallSpeedManager>();
         poolManager = GetComponent<ObjectPoolManager>();
@@ -86,7 +84,7 @@ public class PitcherManager : MonoBehaviour
 
         // 공 생성 및 초기화
         ball = poolManager.GetBall();
-        hitterManager.CurrentBall = ball;
+        HomerunDerbyManager.Instance.CurrentBall = ball;
 
         // 공 출발 이벤트 발생
         HomerunDerbyManager.Instance.TriggerBallReleased(ball, finalSpeed, pitchPosition);
@@ -108,7 +106,7 @@ public class PitcherManager : MonoBehaviour
         ChangeState(windUpState);
     }
 
-    //던지기 완료->준비
+    //던지기 완료->준비. 애니메이션 이벤트
     public void OnPitchComplete()
     {
         ChangeState(idleState);

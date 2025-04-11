@@ -12,7 +12,7 @@ public class HitterManager : MonoBehaviour
     [SerializeField] PlayerManager playerManager;
 
     // 공 참조
-    public Ball CurrentBall { get; set; }
+    Ball currentBall;
 
     // 컴포넌트 참조
     [HideInInspector] public Animator animator;
@@ -33,7 +33,6 @@ public class HitterManager : MonoBehaviour
     {
         // 컴포넌트 초기화
         animator = GetComponent<Animator>();
-
         // 상태 객체 초기화
         hitterReadyState = new HitterReadyState();
         hitterHitReadyState = new HitterHitReadyState();
@@ -63,29 +62,24 @@ public class HitterManager : MonoBehaviour
     {
         // 스윙 이벤트 발생
         HomerunDerbyManager.Instance.TriggerSwing();
-
-        if (CurrentBall == null) return;
+        currentBall=HomerunDerbyManager.Instance.CurrentBall;
+        if (currentBall == null) return;
 
         // 타이밍 판정
-        float distanceFromHitPoint = hittingPoint.transform.position.z - CurrentBall.transform.position.z;
+        float distanceFromHitPoint = hittingPoint.transform.position.z - currentBall.transform.position.z;
         hitTiming = qualityEvaluator.EvaluateHitQuality(distanceFromHitPoint);
         Debug.Log("타이밍 : "+hitTiming.ToString());
-        if (hitTiming == EHitTiming.Miss)
-        {
-            Debug.Log("Miss");
-            HomerunDerbyManager.Instance.TriggerMiss();
-            return;
-        }
+
+        if (hitTiming == EHitTiming.Miss) return;   //타격 타이밍 미스
 
         // 볼 판정 타격 성공 여부 (선구안 영향)
-        if (CurrentBall.PitchPosition == EPitchPosition.Ball)
+        if (currentBall.PitchPosition == EPitchPosition.Ball)
         {
             float eyeSight = GetPlayerStat(pm => pm.CurrentEyeSight);
 
             if (!hitStatCalculator.CheckBallHitSuccess(eyeSight))
             {
-                Debug.Log("Ball Swing - Fail");
-                HomerunDerbyManager.Instance.TriggerMiss();
+                Debug.Log("Ball Swing - Fail");     //타격 타이밍 좋았지만 볼에 헛스윙
                 return;
             }
         }
@@ -126,7 +120,7 @@ public class HitterManager : MonoBehaviour
                                                 out offset1, out offset2, out endPoint);
 
         // 공 궤적 애니메이션 실행
-        StartCoroutine(CurrentBall.ApplyHitMovement(startPoint, offset1, offset2, endPoint));
+        StartCoroutine(currentBall.ApplyHitMovement(startPoint, offset1, offset2, endPoint));
     }
 
     // 상태 변경 메서드

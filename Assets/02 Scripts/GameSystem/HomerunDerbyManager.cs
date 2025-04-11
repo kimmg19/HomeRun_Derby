@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+
 public enum GameState
 {
     Intro,
@@ -15,6 +16,7 @@ public class HomerunDerbyManager : MonoBehaviour
 
     GameState state;
     Coroutine pitchCouroutine;
+    public Ball CurrentBall { get; set; } //현재 투수가 던진 공
     [SerializeField] GameObject readyUI;
     [SerializeField] PitcherManager pitcherManager;
     [SerializeField] HitterManager hitterManager;
@@ -22,36 +24,42 @@ public class HomerunDerbyManager : MonoBehaviour
     [SerializeField] float pitchClock;
 
     //이벤트
-    public event Action OnSwing;
-    public event Action<EHitTiming, float> OnBallHit;
-    public event Action OnMiss;
-    public event Action GameReady;
-    public event Action GameFinished;
-    public event Action OnWindUpStart;
-    public event Action OnPitchComplete;
-    public event Action<Ball, float, EPitchPosition> OnBallReleased;
+    event Action OnSwing;
+    event Action<EHitTiming, float> OnBallHit;
+    event Action OnGameReady;
+    event Action OnGameFinished;
+    event Action OnWindUpStart;
+    event Action OnPitchComplete;
+    event Action<Ball, float, EPitchPosition> OnBallReleased;
 
     //이벤트 트리거
     public void TriggerSwing() => OnSwing?.Invoke();
     public void TriggerBallHit(EHitTiming timing, float distance) => OnBallHit?.Invoke(timing, distance);
-    public void TriggerMiss() => OnMiss?.Invoke();
     public void TriggerWindUpStart() => OnWindUpStart?.Invoke();
     public void TriggerPitchComplete() => OnPitchComplete?.Invoke();
     public void TriggerBallReleased(Ball ball, float speed, EPitchPosition position) =>
-        OnBallReleased?.Invoke(ball, speed, position);    
+        OnBallReleased?.Invoke(ball, speed, position);
+    public void TriggerGameReady()=> OnGameReady?.Invoke();
+    public void TriggerGameFinished()=>OnGameFinished?.Invoke();
 
     void Awake()
     {
         if (Instance == null || Instance != this) Instance = this;
-        OnSwing += SwingCount;
         SetUpEventListener();
     }
-
+    void SetUpEventListener()
+    {
+        OnGameReady += GameStarted;
+        OnGameFinished += GameFinished;
+        OnSwing += SwingCount;
+        //투수 공 던지는 순간 타자 다리 들기
+        if (hitterManager) OnPitchComplete += hitterManager.OnReady;
+    }
     void Start()
     {
-        GameReady?.Invoke();
+        TriggerGameReady();
     }
-    
+
     IEnumerator StartPitching()
     {
         while (swingChance > 0 && state == GameState.Playing)
@@ -59,9 +67,9 @@ public class HomerunDerbyManager : MonoBehaviour
             pitcherManager.Pitching();
             yield return new WaitForSeconds(pitchClock);
         }
-        GameFinished?.Invoke();
+        TriggerGameFinished();
     }
-
+    //이상함
     public void OnTouch()
     {
         if (state == GameState.Intro)
@@ -74,17 +82,10 @@ public class HomerunDerbyManager : MonoBehaviour
         }
         else
         {
-            if (pitcherManager.eState != PitchState.Throw) return;
+            if (pitcherManager.EState != PitchState.Throw) return;
             print("Swing");
             hitterManager.Swing();
         }
-    }
-
-    void SetUpEventListener()
-    {
-        GameReady += GameStarted;
-        GameFinished += GameFinished_Handler;
-        if (hitterManager) OnPitchComplete += hitterManager.OnReady;
     }
 
     void GameStarted()
@@ -93,7 +94,7 @@ public class HomerunDerbyManager : MonoBehaviour
         print("Loading Complete");
     }
 
-    void GameFinished_Handler()
+    void GameFinished()
     {
         state = GameState.Finish;
         print("Finish");
@@ -101,13 +102,12 @@ public class HomerunDerbyManager : MonoBehaviour
 
     void ClearAllEventListeners()
     {
-        GameReady = null;
-        GameFinished = null;
+        OnGameReady = null;
+        OnGameFinished = null;
         OnWindUpStart = null;
         OnPitchComplete = null;
         OnBallReleased = null;
         OnBallHit = null;
-        OnMiss = null;
         OnSwing = null;
     }
 
