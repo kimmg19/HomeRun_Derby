@@ -6,7 +6,7 @@
             "id": "0c524300-f9af-43a3-bdd2-ed844ccf54d2",
             "actions": [
                 {
-                    "name": "Swing",
+                    "name": "Touch",
                     "type": "Button",
                     "id": "1a4c154e-386a-4529-a8e5-bc3bb324f0fc",
                     "expectedControlType": "",
@@ -23,7 +23,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Swing",
+                    "action": "Touch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -34,7 +34,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Swing",
+                    "action": "Touch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -45,7 +45,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Touch",
-                    "action": "Swing",
+                    "action": "Touch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -56,7 +56,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
-                    "action": "Swing",
+                    "action": "Touch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -67,7 +67,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Swing",
+                    "action": "Touch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

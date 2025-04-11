@@ -1,9 +1,12 @@
 using System;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
-using UnityEngine.Events;
 
-// 투수 관리 클래스 - 상태 패턴을 이용해 투수의 행동을 관리
+public enum PitchState
+{
+    Ready,
+    Throw
+}
+
 public class PitcherManager : MonoBehaviour
 {
     [Header("투구 설정")]
@@ -11,43 +14,33 @@ public class PitcherManager : MonoBehaviour
     [SerializeField, Range(1, 3)] int currentDifficulty = 1;
     [SerializeField] float strikeChance = 0.7f;
 
-    [Header("이벤트")]
-    [SerializeField] public UnityEvent onWindUpStart;
-    [SerializeField] public UnityEvent onPitchComplete;
-    UnityEvent<Ball, float, EPitchPosition> onBallReleased;
-
-    // 컴포넌트 참조
     [HideInInspector] public Animator animator;
     StrikeZoneManager strikeZoneManager;
     BallSpeedManager ballSpeedManager;
     ObjectPoolManager poolManager;
-    HitterManager hitterManager;
 
     // 투구 데이터
     Ball ball;
     Vector3 catchPoint;
     float finalSpeed;
-    EPitchPosition pitchPosition;
+    public EPitchPosition pitchPosition;
     IPitchData pitchData;
 
     // 상태 관리
-    IPitcherState currentState;
+    IPitcherState current_IState;
+    public PitchState EState { get; set; }
     PitcherIdleState idleState;
     PitcherReadyState readyState;
     PitcherWindUpState windUpState;
     PitcherThrowState throwState;
 
-    // 초기화 - 필요한 컴포넌트와 상태 객체를 생성
     void Awake()
     {
-        // 컴포넌트 참조 초기화
-        hitterManager = FindObjectOfType<HitterManager>();
         strikeZoneManager = GetComponent<StrikeZoneManager>();
         ballSpeedManager = GetComponent<BallSpeedManager>();
         poolManager = GetComponent<ObjectPoolManager>();
         animator = GetComponent<Animator>();
 
-        // 상태 객체 초기화
         idleState = new PitcherIdleState();
         readyState = new PitcherReadyState();
         windUpState = new PitcherWindUpState();
@@ -87,40 +80,43 @@ public class PitcherManager : MonoBehaviour
     public void ExecutePitch()
     {
         // 타자에게 투구 완료 신호 전달
-        onPitchComplete?.Invoke();
+        HomerunDerbyManager.Instance.TriggerPitchComplete();
 
         // 공 생성 및 초기화
         ball = poolManager.GetBall();
-        hitterManager.CurrentBall = ball;
+        HomerunDerbyManager.Instance.CurrentBall = ball;
 
         // 공 출발 이벤트 발생
-        onBallReleased?.Invoke(ball, finalSpeed, pitchPosition);
+        HomerunDerbyManager.Instance.TriggerBallReleased(ball, finalSpeed, pitchPosition);
 
         // 투구 시작
-        ball.Init(pitchData, (int)finalSpeed, ball.transform.position, catchPoint);
+        ball.Init(pitchData, pitchPosition, (int)finalSpeed, ball.transform.position, catchPoint);
         ball.Pitch();
     }
 
-    // 와인드업 애니메이션 완료 시 호출
+    // 와인드업 애니메이션 완료 시 호출->투구
     public void OnWindUpComplete()
     {
         ChangeState(throwState);
     }
 
-    // 준비 애니메이션 완료 시 호출
+    // 준비 애니메이션 완료 시 호출->와인드업
     public void OnReadyComplete()
     {
         ChangeState(windUpState);
     }
+
+    //던지기 완료->준비. 애니메이션 이벤트
     public void OnPitchComplete()
     {
         ChangeState(idleState);
     }
+
     // 상태 변경 메서드
     public void ChangeState(IPitcherState newState)
     {
-        currentState?.Exit(this);
-        currentState = newState;
-        currentState?.Enter(this);
+        current_IState?.Exit(this);
+        current_IState = newState;
+        current_IState?.Enter(this);
     }
 }
