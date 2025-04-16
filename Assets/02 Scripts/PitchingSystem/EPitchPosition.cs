@@ -4,6 +4,6 @@ using UnityEngine;
 
 public enum EPitchPosition
 {
-    Strike,
-    Ball
+    STRIKE,
+    BALL
 }

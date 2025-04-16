@@ -10,13 +10,13 @@ public class HitterHitReadyState : IHitterState
         hitter.animator.ResetTrigger("Hit");
     }
 
-    public void Exit(HitterManager hitter)
+   /* public void Exit(HitterManager hitter)
     {
     }
 
     public void Update(HitterManager hitter)
     {
-    }
+    }*/
 
     
 }
