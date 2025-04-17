@@ -121,6 +121,7 @@ public class HitterManager : MonoBehaviour
         // 스탯 가져오기
         float power = GetPlayerStat(pm => pm.CurrentPower);
         float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);
+        EventManager.Instance.PublishEnableBallData(true);
 
         Debug.Log("power: " + power);
         Debug.Log("CriticalChance: " + criticalChance);

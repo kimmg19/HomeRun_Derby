@@ -11,7 +11,6 @@ public class PitcherManager : MonoBehaviour
 {
     [Header("투구 설정")]
     [SerializeField] PitchTypeDataSO[] pitchTypeDataSO;
-    [SerializeField, Range(1, 3)] int currentDifficulty = 1;
     [SerializeField,ReadOnly] float strikeChance=0.8f;
     [HideInInspector] public Animator animator;
     StrikeZoneManager strikeZoneManager;
@@ -55,10 +54,11 @@ public class PitcherManager : MonoBehaviour
     }
    
     // 투구 시작 - 홈런더비 매니저에서 호출
-    public void Pitching()
+    public void Pitching(int currentDifficulty)
     {
         if (ball != null)
             ObjectPoolManager.Instance.ReturnBall(ball);
+        EventManager.Instance.PublishEnableBallData(false);
 
         // 구종 선택과 투구 설정
         curPitchType = pitchTypeDataSO[UnityEngine.Random.Range(0, pitchTypeDataSO.Length)];

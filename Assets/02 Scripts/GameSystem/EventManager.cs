@@ -19,7 +19,7 @@ public class EventManager : MonoBehaviour
 
     // 투수 관련 이벤트
     public event Action<bool> EnableBallData;
-    public event Action OnPitchStart;
+    public event Action<int> OnPitchStart;
     public event Action OnPitchComplete;
     public event Action<float, EPitchPosition, EPitchType> OnBallReleased;
 
@@ -49,7 +49,7 @@ public class EventManager : MonoBehaviour
     public void PublishGameFinished() => OnGameFinished?.Invoke();
 
     public void PublishEnableBallData(bool b) => EnableBallData?.Invoke(b);
-    public void PublishPitch() => OnPitchStart?.Invoke();
+    public void PublishPitch(int currentDifficulty) => OnPitchStart?.Invoke(currentDifficulty);
     public void PublishPitchComplete() => OnPitchComplete?.Invoke();
     public void PublishBallReleased(float speed, EPitchPosition position, EPitchType curPitchType) =>
        OnBallReleased?.Invoke(speed, position, curPitchType);

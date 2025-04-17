@@ -1,7 +1,5 @@
 using System.Collections;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum EGameState
 {
@@ -18,8 +16,9 @@ public class HomerunDerbyManager : MonoBehaviour
     Coroutine pitchCoroutine;
     public Ball CurrentBall { get; set; } // 현재 투수가 던진 공
     public int SwingCount { get; private set; } = 15;
+    [Range(1, 5)] public int currentDifficulty = 1;
     [SerializeField, ReadOnly] float pitchClock = 8;
-    
+
     void Awake()
     {
         if (Instance == null || Instance != this)
@@ -46,10 +45,14 @@ public class HomerunDerbyManager : MonoBehaviour
         // 게임 시작 이벤트 발행
         EventManager.Instance.PublishGameReady();
     }
-    
+
     void DecreaseSwingCount()
     {
         SwingCount--;
+        if (SwingCount > 9 && SwingCount <= 12) currentDifficulty = 2;
+        else if (SwingCount > 6 && SwingCount <= 9) currentDifficulty = 3;
+        else if (SwingCount > 3 && SwingCount <= 6) currentDifficulty = 4;
+        else if (SwingCount <= 3) currentDifficulty = 5;
         // 변경된 값을 UI 등에 알림
         EventManager.Instance.PublishSwingCount(SwingCount);
     }
@@ -58,7 +61,7 @@ public class HomerunDerbyManager : MonoBehaviour
     {
         while (SwingCount > 0 && GameState == EGameState.Playing)
         {
-            EventManager.Instance.PublishPitch();
+            EventManager.Instance.PublishPitch(currentDifficulty);
             yield return new WaitForSeconds(pitchClock);
         }
 
@@ -88,13 +91,13 @@ public class HomerunDerbyManager : MonoBehaviour
     private void TouchAndStart()
     {
         print("Game Start");
-        GameState = EGameState.Playing;        
+        GameState = EGameState.Playing;
         pitchCoroutine = StartCoroutine(StartPitching());
     }
 
     private void GameIsReady()
     {
-        GameState = EGameState.Intro;        
+        GameState = EGameState.Intro;
         print("Loading Complete");
     }
 

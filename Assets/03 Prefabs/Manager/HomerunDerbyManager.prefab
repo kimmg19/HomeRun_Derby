@@ -45,10 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a79d6eb7c0ed94692980116b7f29f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
-  gameSettings: {fileID: 11400000, guid: c74ca17aeef4a3e48bc1a17159997741, type: 2}
-  readyUI: {fileID: 0}
-  swingChance: 15
+  currentDifficulty: 1
   pitchClock: 8
 --- !u!114 &7927835536679124867
 MonoBehaviour:

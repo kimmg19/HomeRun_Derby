@@ -54,7 +54,7 @@ public class Ball : MonoBehaviour
         }
         // 최종 위치 보정
         transform.position = p4;
-
+        EventManager.Instance.PublishEnableBallData(true);
         // 잠시 대기 후 공 반환
         yield return new WaitForSeconds(2f);
 

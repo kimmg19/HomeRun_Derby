@@ -29,10 +29,10 @@ public class HUD : MonoBehaviour
     {
         maxCount = HomerunDerbyManager.Instance != null ?
             HomerunDerbyManager.Instance.SwingCount : 15;
+        DataBox.SetActive(false);
     }
     void ChangeCount(int count)
     {
-        print(count);
         swingChanceText.text = $"{count} / {maxCount}";
     }
     void DisableIntro()
