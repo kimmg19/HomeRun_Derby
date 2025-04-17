@@ -1,8 +1,8 @@
 //±¸Á¾
 public enum EPitchType
 {
-    Faseball,
-    Curveball,
-    Slider,
-    ChangeUp    
+    FASTBALL,
+    CURVE,
+    SLIDER,
+    CHANGEUP    
 }

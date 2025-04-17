@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 2CurveBall
   m_EditorClassIdentifier: 
   pitchType: 1
-  speedMultiplier: 1.28
+  speedMultiplier: 1.2
   offset1: {x: -0.3, y: 0.7, z: -4}
   offset2: {x: -0.15, y: 0.2, z: 0.5}

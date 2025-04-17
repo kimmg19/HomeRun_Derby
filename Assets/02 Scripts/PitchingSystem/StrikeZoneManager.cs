@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class StrikeZoneManager : MonoBehaviour
 {
+    enum BallZone { High, Low, Left, Right }
+
     [Header("포구 위치")]
     [SerializeField] Transform catchPoint;
 
@@ -14,14 +16,6 @@ public class StrikeZoneManager : MonoBehaviour
     [SerializeField, Range(0.05f, 0.2f)] float strikeZoneHalfWidth = 0.1f;
     [SerializeField, Range(0.1f, 0.3f)] float ballZoneHalfHeight = 0.2f;
     [SerializeField, Range(0.1f, 0.3f)] float ballZoneHalfWidth = 0.18f;
-
-    enum BallZone
-    {
-        High,
-        Low,
-        Left,
-        Right
-    }
 
     /// <summary>
     /// 투구 위치를 설정합니다.
@@ -32,11 +26,11 @@ public class StrikeZoneManager : MonoBehaviour
     {
         switch (pitchPosition)
         {
-            case EPitchPosition.Strike:
+            case EPitchPosition.STRIKE:
                 Debug.Log("스트라이크");
                 return GetStrikePosition();
 
-            case EPitchPosition.Ball:
+            case EPitchPosition.BALL:
                 Debug.Log("볼");
                 return GetBallPosition((BallZone)Random.Range(0, 4));
 
