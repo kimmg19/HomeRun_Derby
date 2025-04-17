@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Pitch", menuName = "PitchType")]
+[CreateAssetMenu(fileName = "New Pitch", menuName = "HomerunDerby/PitchType")]
 public class PitchTypeDataSO : ScriptableObject, IPitchData
 {
     
     [Header("구종 설정")]
-    [SerializeField] EPitchType pitchType;
+    public EPitchType pitchType;
     [Tooltip("구속 배율")]
     [SerializeField] float speedMultiplier = 1.4f;
     [Tooltip("첫 번째 제어점")]

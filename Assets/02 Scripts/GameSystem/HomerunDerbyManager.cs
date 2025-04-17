@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-
-public enum GameState
+public enum EGameState
 {
     Intro,
     Playing,
@@ -14,112 +12,118 @@ public class HomerunDerbyManager : MonoBehaviour
 {
     public static HomerunDerbyManager Instance;
 
-    GameState state;
-    Coroutine pitchCouroutine;
-    public Ball CurrentBall { get; set; } //현재 투수가 던진 공
-    [SerializeField] GameObject readyUI;
-    [SerializeField] PitcherManager pitcherManager;
-    [SerializeField] HitterManager hitterManager;
-    [SerializeField] float swingChance = 15;
-    [SerializeField] float pitchClock;
-
-    //이벤트
-    event Action OnSwing;
-    event Action<EHitTiming, float> OnBallHit;
-    event Action OnGameReady;
-    event Action OnGameFinished;
-    event Action OnWindUpStart;
-    event Action OnPitchComplete;
-    event Action<Ball, float, EPitchPosition> OnBallReleased;
-
-    //이벤트 트리거
-    public void TriggerSwing() => OnSwing?.Invoke();
-    public void TriggerBallHit(EHitTiming timing, float distance) => OnBallHit?.Invoke(timing, distance);
-    public void TriggerWindUpStart() => OnWindUpStart?.Invoke();
-    public void TriggerPitchComplete() => OnPitchComplete?.Invoke();
-    public void TriggerBallReleased(Ball ball, float speed, EPitchPosition position) =>
-        OnBallReleased?.Invoke(ball, speed, position);
-    public void TriggerGameReady()=> OnGameReady?.Invoke();
-    public void TriggerGameFinished()=>OnGameFinished?.Invoke();
+    public EGameState GameState { get; set; }
+    Coroutine pitchCoroutine;
+    public Ball CurrentBall { get; set; } // 현재 투수가 던진 공
+    public int SwingCount { get; private set; } = 15;
+    [Range(1, 5)] public int currentDifficulty = 1;
+    [SerializeField, ReadOnly] float pitchClock = 8;
 
     void Awake()
     {
-        if (Instance == null || Instance != this) Instance = this;
-        SetUpEventListener();
+        if (Instance == null || Instance != this)
+            Instance = this;
     }
-    void SetUpEventListener()
+
+    void OnEnable()
     {
-        OnGameReady += GameStarted;
-        OnGameFinished += GameFinished;
-        OnSwing += SwingCount;
-        //투수 공 던지는 순간 타자 다리 들기
-        if (hitterManager) OnPitchComplete += hitterManager.OnReady;
+        // 이벤트 구독
+        if (EventManager.Instance != null)
+        {
+            // 스윙 이벤트 구독
+            EventManager.Instance.OnGameReady += GameIsReady;
+            EventManager.Instance.OnGameFinished += GameFinished;
+            EventManager.Instance.OnGameStart += TouchAndStart;
+            EventManager.Instance.OnSwingOccurred += DecreaseSwingCount;
+
+        }
+        else Debug.LogError("HomerunDerbyManager 이벤트 등록 실패");
+
     }
     void Start()
     {
-        TriggerGameReady();
+        // 게임 시작 이벤트 발행
+        EventManager.Instance.PublishGameReady();
+    }
+
+    void DecreaseSwingCount()
+    {
+        SwingCount--;
+        if (SwingCount > 9 && SwingCount <= 12) currentDifficulty = 2;
+        else if (SwingCount > 6 && SwingCount <= 9) currentDifficulty = 3;
+        else if (SwingCount > 3 && SwingCount <= 6) currentDifficulty = 4;
+        else if (SwingCount <= 3) currentDifficulty = 5;
+        // 변경된 값을 UI 등에 알림
+        EventManager.Instance.PublishSwingCount(SwingCount);
     }
 
     IEnumerator StartPitching()
     {
-        while (swingChance > 0 && state == GameState.Playing)
+        while (SwingCount > 0 && GameState == EGameState.Playing)
         {
-            pitcherManager.Pitching();
+            EventManager.Instance.PublishPitch(currentDifficulty);
             yield return new WaitForSeconds(pitchClock);
         }
-        TriggerGameFinished();
+
+        // 게임 종료 이벤트 발행
+        EventManager.Instance.PublishGameFinished();
     }
-    //이상함
+
+    // 터치 처리
     public void OnTouch()
     {
-        if (state == GameState.Intro)
+        if (GameState == EGameState.Intro)
         {
-            print("Game Start");
-            readyUI.SetActive(false);
-            state = GameState.Playing;
-            pitchCouroutine = StartCoroutine(StartPitching());
+            EventManager.Instance.PublishGameStart();
             return;
+        }
+        else if (GameState == EGameState.Playing && CurrentBall != null)
+        {
+            print("Swing");
+            EventManager.Instance.PublishSwing();
         }
         else
         {
-            if (pitcherManager.EState != PitchState.Throw) return;
-            print("Swing");
-            hitterManager.Swing();
+            Debug.LogError("Touch Error!");
         }
     }
 
-    void GameStarted()
+    private void TouchAndStart()
     {
-        state = GameState.Intro;
+        print("Game Start");
+        GameState = EGameState.Playing;
+        pitchCoroutine = StartCoroutine(StartPitching());
+    }
+
+    private void GameIsReady()
+    {
+        GameState = EGameState.Intro;
         print("Loading Complete");
     }
 
-    void GameFinished()
+    private void GameFinished()
     {
-        state = GameState.Finish;
+        GameState = EGameState.Finish;
         print("Finish");
-    }
-
-    void ClearAllEventListeners()
-    {
-        OnGameReady = null;
-        OnGameFinished = null;
-        OnWindUpStart = null;
-        OnPitchComplete = null;
-        OnBallReleased = null;
-        OnBallHit = null;
-        OnSwing = null;
-    }
-
-    //이벤트 함수
-    void SwingCount()
-    {
-        swingChance--;
     }
 
     void OnDisable()
     {
-        ClearAllEventListeners();
-        if (pitchCouroutine != null) StopCoroutine(pitchCouroutine);
+        // 이벤트 구독 해제
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.OnSwingOccurred -= DecreaseSwingCount;
+            EventManager.Instance.OnGameReady -= GameIsReady;
+            EventManager.Instance.OnGameFinished -= GameFinished;
+            EventManager.Instance.OnGameStart -= TouchAndStart;
+
+        }
+        else Debug.LogError("HomerunDerbyManager 이벤트 해제 실패");
+
+        if (pitchCoroutine != null)
+        {
+            StopCoroutine(pitchCoroutine);
+            pitchCoroutine = null;
+        }
     }
 }

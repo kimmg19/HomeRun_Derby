@@ -29,10 +29,12 @@ public class HitterManager : MonoBehaviour
     HitterHitState hitterHitState;
 
     EHitTiming hitTiming;
+
     void Awake()
     {
         // 컴포넌트 초기화
         animator = GetComponent<Animator>();
+
         // 상태 객체 초기화
         hitterReadyState = new HitterReadyState();
         hitterHitReadyState = new HitterHitReadyState();
@@ -47,9 +49,33 @@ public class HitterManager : MonoBehaviour
             Debug.LogError("Calculator Null!");
         }
     }
+
     void Start()
     {
         ChangeState(hitterReadyState);
+    }
+
+    void OnEnable()
+    {
+        // 이벤트 구독
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.OnPitchComplete += OnReady;
+            EventManager.Instance.OnSwingStart += Swing;
+        }
+        else Debug.LogError("HitterManager 이벤트 등록 실패");
+    }
+
+    void OnDisable()
+    {
+        // 이벤트 구독 해제
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.OnPitchComplete -= OnReady;
+            EventManager.Instance.OnSwingStart -= Swing;
+        }
+        else Debug.LogError("HitterManager 이벤트 해제 실패");
+
     }
 
     float GetPlayerStat(Func<PlayerManager, float> statSelector, float defaultValue = 0f)
@@ -60,29 +86,31 @@ public class HitterManager : MonoBehaviour
     // 타격 판정 및 결과 처리
     public void CheckHit()
     {
-        // 스윙 이벤트 발생
-        HomerunDerbyManager.Instance.TriggerSwing();
-        currentBall=HomerunDerbyManager.Instance.CurrentBall;
+        // 스윙 이벤트 발행
+        EventManager.Instance.PublishSwingOccurred();   
+
+        currentBall = HomerunDerbyManager.Instance.CurrentBall;
         if (currentBall == null) return;
 
         // 타이밍 판정
         float distanceFromHitPoint = hittingPoint.transform.position.z - currentBall.transform.position.z;
         hitTiming = qualityEvaluator.EvaluateHitQuality(distanceFromHitPoint);
-        Debug.Log("타이밍 : "+hitTiming.ToString());
+        Debug.Log("타이밍 : " + hitTiming.ToString());
 
-        if (hitTiming == EHitTiming.Miss) return;   //타격 타이밍 미스
+        if (hitTiming == EHitTiming.Miss) return;   // 타격 타이밍 미스
 
         // 볼 판정 타격 성공 여부 (선구안 영향)
-        if (currentBall.PitchPosition == EPitchPosition.Ball)
+        if (currentBall.PitchPosition == EPitchPosition.BALL)
         {
             float eyeSight = GetPlayerStat(pm => pm.CurrentEyeSight);
 
             if (!hitStatCalculator.CheckBallHitSuccess(eyeSight))
             {
-                Debug.Log("Ball Swing - Fail");     //타격 타이밍 좋았지만 볼에 헛스윙
+                Debug.Log("Ball Swing - Fail");     // 타격 타이밍 좋았지만 볼에 헛스윙
                 return;
             }
         }
+
         // 타격 성공 처리
         ProcessHit();
     }
@@ -90,9 +118,10 @@ public class HitterManager : MonoBehaviour
     // 타격 결과 처리
     void ProcessHit()
     {
-        // 스탯 가져오기 - 헬퍼 메소드 사용
+        // 스탯 가져오기
         float power = GetPlayerStat(pm => pm.CurrentPower);
         float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);
+        EventManager.Instance.PublishEnableBallData(true);
 
         Debug.Log("power: " + power);
         Debug.Log("CriticalChance: " + criticalChance);
@@ -110,38 +139,41 @@ public class HitterManager : MonoBehaviour
         // 스탯 기반 비거리 계산 (확률적)
         float distance = hitStatCalculator.CalculateHitDistance(baseDistance, hitTiming, power, isCritical);
         Debug.Log("Distance: " + distance);
-        // 타격 이벤트 발생
-        HomerunDerbyManager.Instance.TriggerBallHit(hitTiming, distance);
+
+        // 타격 이벤트 발행
+        EventManager.Instance.PublishBallHit(hitTiming, distance);
 
         // 공 궤적 제어점 계산
-        Vector3 startPoint = hittingPoint.position;
+        Vector3 startPoint = currentBall.transform.position;
         Vector3 offset1, offset2, endPoint;
         trajectoryCalculator.CalculateTrajectory(startPoint, angle, distance, maxHeight,
-                                                out offset1, out offset2, out endPoint);
+                                              out offset1, out offset2, out endPoint);
 
         // 공 궤적 애니메이션 실행
         StartCoroutine(currentBall.ApplyHitMovement(startPoint, offset1, offset2, endPoint));
     }
 
-    // 상태 변경 메서드
+    // 상태 변경 메소드
     void ChangeState(IHitterState newState)
     {
-        currentState?.Exit(this);
+        //currentState?.Exit(this);
         currentState = newState;
         currentState?.Enter(this);
     }
 
-    // 외부 이벤트에 의한 상태 전환 메서드
+    // 외부 이벤트에 의한 상태 전환 메소드
     public void Swing()
     {
         ChangeState(hitterHitState);
     }
 
+    // 투구 완료 시 호출되는 이벤트 핸들러
     public void OnReady()
     {
         ChangeState(hitterHitReadyState);
     }
 
+    // 애니메이션 이벤트에서 호출되는 메소드들
     public void OnSwingReadyComplete()
     {
         ChangeState(hitterReadyState);

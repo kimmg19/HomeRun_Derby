@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 1FastBall
   m_EditorClassIdentifier: 
   pitchType: 0
-  speedMultiplier: 1.45
+  speedMultiplier: 1.35
   offset1: {x: 0, y: 0, z: -1}
   offset2: {x: 0, y: 0, z: 1}
