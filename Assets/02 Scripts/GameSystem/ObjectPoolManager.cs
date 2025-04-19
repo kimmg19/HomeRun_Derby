@@ -31,7 +31,7 @@ public class ObjectPoolManager : MonoBehaviour
     public Ball GetBall()
     {
         Ball ball;
-
+        print("가져와");
         if (poolQueue.Count == 0)
         {
             // 필요시 새 공 생성
@@ -51,7 +51,7 @@ public class ObjectPoolManager : MonoBehaviour
     public void ReturnBall(Ball ball)
     {
         if (ball == null) return;
-
+        print("반환");
         ball.gameObject.SetActive(false);
         poolQueue.Enqueue(ball);
     }

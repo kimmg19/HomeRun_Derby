@@ -17,7 +17,7 @@ public class PitcherManager : MonoBehaviour
     BallSpeedManager ballSpeedManager;
 
     // 투구 데이터
-    Ball ball;
+    [SerializeField]Ball ball;
     Vector3 catchPoint;
     float finalSpeed;
     public EPitchPosition PitchPosition { get; set; }
@@ -56,8 +56,8 @@ public class PitcherManager : MonoBehaviour
     // 투구 시작 - 홈런더비 매니저에서 호출
     public void Pitching(int currentDifficulty)
     {
-        if (ball != null)
-            ObjectPoolManager.Instance.ReturnBall(ball);
+        /*if (ball != null)
+            ObjectPoolManager.Instance.ReturnBall(ball);*/
         EventManager.Instance.PublishEnableBallData(false);
 
         // 구종 선택과 투구 설정
@@ -85,9 +85,7 @@ public class PitcherManager : MonoBehaviour
 
     // 투구 실행 - 애니메이션 이벤트나 상태에서 호출
     public void ExecutePitch()
-    {
-        // 투구 완료 이벤트 발행
-        EventManager.Instance.PublishPitchComplete();
+    {       
 
         // 공 생성 및 초기화
         ball = ObjectPoolManager.Instance.GetBall();
@@ -101,6 +99,10 @@ public class PitcherManager : MonoBehaviour
         ball.Pitch();
     }
 
+    public void OnWindUpStart()
+    {
+        EventManager.Instance.PublishWindUpStart();
+    }
     // 와인드업 애니메이션 완료 시 호출
     public void OnWindUpComplete()
     {
@@ -114,7 +116,7 @@ public class PitcherManager : MonoBehaviour
     }
 
     // 던지기 완료->준비. 애니메이션 이벤트
-    public void OnPitchComplete()
+    public void OnPitchCompleteEvent()
     {
         ChangeState(idleState);
     }

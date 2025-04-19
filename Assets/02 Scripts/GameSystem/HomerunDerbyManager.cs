@@ -77,15 +77,11 @@ public class HomerunDerbyManager : MonoBehaviour
             EventManager.Instance.PublishGameStart();
             return;
         }
-        else if (GameState == EGameState.Playing && CurrentBall != null)
+        else if (GameState == EGameState.Playing)
         {
-            print("Swing");
             EventManager.Instance.PublishSwing();
         }
-        else
-        {
-            Debug.LogError("Touch Error!");
-        }
+        else return;
     }
 
     private void TouchAndStart()
