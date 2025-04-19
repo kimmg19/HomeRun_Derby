@@ -92,6 +92,7 @@ public class Ball : MonoBehaviour
         // °ø ¹ÝÈ¯
         if (ObjectPoolManager.Instance != null)
         {
+            
             ObjectPoolManager.Instance.ReturnBall(this);
         }
     }
