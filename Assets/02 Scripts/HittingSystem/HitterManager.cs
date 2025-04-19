@@ -60,7 +60,7 @@ public class HitterManager : MonoBehaviour
         // 이벤트 구독
         if (EventManager.Instance != null)
         {
-            EventManager.Instance.OnPitchComplete += OnReady;
+            EventManager.Instance.OnWindUpStart += OnReady;
             EventManager.Instance.OnSwingStart += Swing;
         }
         else Debug.LogError("HitterManager 이벤트 등록 실패");
@@ -71,7 +71,7 @@ public class HitterManager : MonoBehaviour
         // 이벤트 구독 해제
         if (EventManager.Instance != null)
         {
-            EventManager.Instance.OnPitchComplete -= OnReady;
+            EventManager.Instance.OnWindUpStart -= OnReady;
             EventManager.Instance.OnSwingStart -= Swing;
         }
         else Debug.LogError("HitterManager 이벤트 해제 실패");
@@ -167,14 +167,15 @@ public class HitterManager : MonoBehaviour
         ChangeState(hitterHitState);
     }
 
-    // 투구 완료 시 호출되는 이벤트 핸들러
+    // 투수 와인드업 시작 시 호출되는 이벤트
     public void OnReady()
-    {
+    {        
         ChangeState(hitterHitReadyState);
     }
+    
 
     // 애니메이션 이벤트에서 호출되는 메소드들
-    public void OnSwingReadyComplete()
+    public void OnToSwingReady()
     {
         ChangeState(hitterReadyState);
     }
