@@ -8,7 +8,7 @@ using UnityEngine;
 public class EventManager : MonoBehaviour
 {
     // 싱글톤 패턴 구현
-    public static EventManager Instance { get; private set; }
+    public static EventManager Instance { get; set; }
 
     public event Action OnReloadPlayGroud;
 
@@ -26,8 +26,13 @@ public class EventManager : MonoBehaviour
     // 타자 관련 이벤트
     public event Action OnSwingStart;
     public event Action<int> OnSwingCount;
-    public event Action<EHitTiming, float> OnBallHit; 
+    public event Action<EHitTiming, float> OnBallHit;
     public event Action OnSwingOccurred;
+
+    // 점수 관련 이벤트 추가
+    public event Action<int> OnScoreChanged;
+    public event Action<int> OnBestScoreChanged;
+    public event Action<bool, float> OnHomerunResult; // 홈런 결과 (홈런 여부, 거리)
 
     void Awake()
     {
@@ -42,7 +47,9 @@ public class EventManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    public void PublishReloadPlayGround()=>OnReloadPlayGroud?.Invoke(); 
+
+    public void PublishReloadPlayGround() => OnReloadPlayGroud?.Invoke();
+
     // 이벤트 발행 메서드들
     public void PublishGameReady() => OnGameReady?.Invoke();
     public void PublishGameStart() => OnGameStart?.Invoke();
@@ -55,8 +62,13 @@ public class EventManager : MonoBehaviour
        OnBallReleased?.Invoke(speed, position, curPitchType);
 
     public void PublishSwingOccurred() => OnSwingOccurred?.Invoke();
-    public void PublishSwingCount(int count) => OnSwingCount?.Invoke(count);//ui업데이트, 스윙카운트 감소
-    public void PublishSwing() => OnSwingStart?.Invoke();//타자 스윙 트리거
+    public void PublishSwingCount(int count) => OnSwingCount?.Invoke(count);
+    public void PublishSwing() => OnSwingStart?.Invoke();
     public void PublishBallHit(EHitTiming timing, float distance) =>
-        OnBallHit?.Invoke(timing, distance);//타격 정보
+        OnBallHit?.Invoke(timing, distance);
+
+    // 점수 관련 이벤트 발행 메서드
+    public void PublishScoreChanged(int score) => OnScoreChanged?.Invoke(score);
+    public void PublishBestScoreChanged(int bestScore) => OnBestScoreChanged?.Invoke(bestScore);
+    public void PublishHomerunResult(bool isHomerun, float distance) => OnHomerunResult?.Invoke(isHomerun, distance);
 }
