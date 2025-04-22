@@ -30,8 +30,8 @@ public class EventManager : MonoBehaviour
     public event Action OnSwingOccurred;
 
     // 점수 관련 이벤트 추가
-    public event Action<int> OnScoreChanged;
-    public event Action<bool, float, EHitTiming> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
+    public event Action<int,int> OnScoreChanged;
+    public event Action<bool, float, EHitTiming, int> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
 
     void Awake()
     {
@@ -67,6 +67,6 @@ public class EventManager : MonoBehaviour
         OnBallHit?.Invoke(timing, distance);
 
     // 점수 관련 이벤트 발행 메서드
-    public void PublishScoreChanged(int score) => OnScoreChanged?.Invoke(score);
-    public void PublishHitResult(bool isHomerun, float distance, EHitTiming timing) => OnHitResult?.Invoke(isHomerun, distance, timing);
+    public void PublishScoreChanged(int currentScore,int targetScore) => OnScoreChanged?.Invoke(currentScore, targetScore);
+    public void PublishHitResult(bool isHomerun, float distance, EHitTiming timing,int score) => OnHitResult?.Invoke(isHomerun, distance, timing,score);
 }

@@ -53,7 +53,7 @@ public class ScoreManager : MonoBehaviour
             baseScore, distanceMultiplier, longDistanceThreshold
         );
         // 홈런 이벤트 발생
-        EventManager.Instance.PublishHitResult(isHomerun, distance, timing);
+        EventManager.Instance.PublishHitResult(isHomerun, distance, timing,score);
 
         // 점수 추가
         AddScore(score);
@@ -62,13 +62,14 @@ public class ScoreManager : MonoBehaviour
     // 점수 추가
     void AddScore(int points)
     {
+        int lastScore=CurrentScore;
         CurrentScore += points;
 
         if (CurrentScore > BestScore)
         {
             BestScore = CurrentScore;
         }
-        EventManager.Instance.PublishScoreChanged(CurrentScore);
+        EventManager.Instance.PublishScoreChanged(lastScore, CurrentScore);
 
     }
 
@@ -83,7 +84,6 @@ public class ScoreManager : MonoBehaviour
     void ResetScore()
     {
         CurrentScore = 0;
-        EventManager.Instance.PublishScoreChanged(CurrentScore);
     }
 
     void OnDisable()
