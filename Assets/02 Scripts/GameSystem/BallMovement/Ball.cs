@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public EPitchPosition PitchPosition { get; private set; }
+    public EPitchPosition PitchPosition { get; set; }
     int speed;
     Vector3 offset1;
     Vector3 offset2;
@@ -96,7 +96,7 @@ public class Ball : MonoBehaviour
             ObjectPoolManager.Instance.ReturnBall(this);
         }
     }
-    private void CheckCoroutine()
+    void CheckCoroutine()
     {
         if (activeCoroutine != null)
         {

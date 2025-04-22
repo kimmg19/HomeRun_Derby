@@ -12,10 +12,10 @@ public class StrikeZoneManager : MonoBehaviour
     [SerializeField] Transform catchPoint;
 
     [Header("존 설정")]
-    [SerializeField, Range(0.05f, 0.2f)] float strikeZoneHalfHeight = 0.1f;
-    [SerializeField, Range(0.05f, 0.2f)] float strikeZoneHalfWidth = 0.1f;
-    [SerializeField, Range(0.1f, 0.3f)] float ballZoneHalfHeight = 0.2f;
-    [SerializeField, Range(0.1f, 0.3f)] float ballZoneHalfWidth = 0.18f;
+    [SerializeField,ReadOnly] float strikeZoneHalfHeight = 0.1f;
+    [SerializeField,ReadOnly] float strikeZoneHalfWidth = 0.1f;
+    [SerializeField, ReadOnly] float ballZoneHalfHeight = 0.2f;
+    [SerializeField, ReadOnly] float ballZoneHalfWidth = 0.18f;
 
     /// <summary>
     /// 투구 위치를 설정합니다.

@@ -16,7 +16,7 @@ public class PitchTypeDataSO : ScriptableObject, IPitchData
     [Tooltip("두 번째 제어점")]
     [SerializeField] Vector3 offset2; 
 
-    private const float DEFAULT_SPEED = 100f;
+    const float DEFAULT_SPEED = 100f;
     public float BaseSpeed => DEFAULT_SPEED;
 
     public EPitchType Type => pitchType;
