@@ -5,7 +5,7 @@ public class HitterManager : MonoBehaviour
 {
     [Header("타격 설정")]
     [SerializeField] Transform hittingPoint;
-    [SerializeField, Range(20f, 80f)] float baseDistance = 40f;
+    [SerializeField,ReadOnly] float baseDistance = 40f;
     [SerializeField, Range(5f, 25f)] float maxHeight = 15f;
 
     [Header("플레이어 스탯")]

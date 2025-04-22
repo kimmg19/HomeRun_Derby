@@ -9,14 +9,14 @@ public class ScoreManager : MonoBehaviour
 
     // Inspector에서 조정 가능한 값들
     [Header("점수 설정")]
-    [SerializeField] int baseScore = 50;
-    [SerializeField] float distanceMultiplier = 2.0f;
-    [SerializeField] float homerunDistance = 70f;
-    [SerializeField] float longDistanceThreshold = 100f;
+    [SerializeField, ReadOnly] int baseScore = 1000;//기본 점수
+    [SerializeField, ReadOnly] float distanceMultiplier = 2.0f;//비거리 계수
+    [SerializeField, ReadOnly] float homerunDistance = 50f;//홈런 비거리 기준
+    [SerializeField, ReadOnly] float longDistanceThreshold = 70f;//대형 홈런 추가점수 기준
 
     // 점수 변수
-    public int CurrentScore { get;  set; }
-    public int BestScore { get;  set; }
+    public int CurrentScore { get; set; }
+    public int BestScore { get; set; }
 
     // 계산기 인스턴스
     ScoreCalculator calculator;
@@ -28,11 +28,8 @@ public class ScoreManager : MonoBehaviour
             Instance = this;
         else if (Instance != this)
             Destroy(gameObject);
-
-        // 계산기 인스턴스 생성
-        calculator = new ScoreCalculator();
-
-        // 최고 점수 로드
+       
+        calculator = new ScoreCalculator();        
         BestScore = PlayerPrefs.GetInt("BestScore", 0);
     }
 
@@ -47,25 +44,16 @@ public class ScoreManager : MonoBehaviour
         else Debug.LogError("ScoreManager 이벤트 등록 실패");
     }
 
-    // 타격 처리 및 점수 계산
+    // 타격 처리 및 점수 계산- 타격 성공 시에만
     void ProcessHit(EHitTiming timing, float distance)
     {
-        if (timing == EHitTiming.Miss) return;
-
-        // 홈런 판정
-        bool isHomerun = calculator.IsHomerun(distance, homerunDistance);
-
-        // 점수 계산
-        int score = calculator.CalculateScore(
+        bool isHomerun = calculator.IsHomerun(distance, homerunDistance);   // 홈런 판정
+        int score = calculator.CalculateScore(                              // 점수 계산
             timing, distance, isHomerun,
             baseScore, distanceMultiplier, longDistanceThreshold
         );
-
         // 홈런 이벤트 발생
-        EventManager.Instance.PublishHomerunResult(isHomerun, distance);
-
-        // 결과 로그
-        Debug.Log($"점수: +{score}점 (거리: {distance}m, 타이밍: {timing}, 홈런: {isHomerun})");
+        EventManager.Instance.PublishHitResult(isHomerun, distance, timing);
 
         // 점수 추가
         AddScore(score);
@@ -75,13 +63,13 @@ public class ScoreManager : MonoBehaviour
     void AddScore(int points)
     {
         CurrentScore += points;
-        EventManager.Instance.PublishScoreChanged(CurrentScore);
 
         if (CurrentScore > BestScore)
         {
             BestScore = CurrentScore;
-            EventManager.Instance.PublishBestScoreChanged(BestScore);
         }
+        EventManager.Instance.PublishScoreChanged(CurrentScore);
+
     }
 
     // 점수 저장
