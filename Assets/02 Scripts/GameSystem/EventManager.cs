@@ -26,12 +26,12 @@ public class EventManager : MonoBehaviour
     // 타자 관련 이벤트
     public event Action OnSwingStart;
     public event Action<int> OnSwingCount;
-    public event Action<EHitTiming, float> OnBallHit;
+    public event Action<EHitTiming, float, bool> OnBallHit;
     public event Action OnSwingOccurred;
 
     // 점수 관련 이벤트 추가
-    public event Action<int,int> OnScoreChanged;
-    public event Action<bool, float, EHitTiming, int> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
+    public event Action<int, int> OnScoreChanged;
+    public event Action<bool, float, EHitTiming, int,bool> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
 
     void Awake()
     {
@@ -63,10 +63,12 @@ public class EventManager : MonoBehaviour
     public void PublishSwingOccurred() => OnSwingOccurred?.Invoke();
     public void PublishSwingCount(int count) => OnSwingCount?.Invoke(count);
     public void PublishSwing() => OnSwingStart?.Invoke();
-    public void PublishBallHit(EHitTiming timing, float distance) =>
-        OnBallHit?.Invoke(timing, distance);
+    public void PublishBallHit(EHitTiming timing, float distance, bool isCritical) =>
+        OnBallHit?.Invoke(timing, distance, isCritical);
 
     // 점수 관련 이벤트 발행 메서드
-    public void PublishScoreChanged(int currentScore,int targetScore) => OnScoreChanged?.Invoke(currentScore, targetScore);
-    public void PublishHitResult(bool isHomerun, float distance, EHitTiming timing,int score) => OnHitResult?.Invoke(isHomerun, distance, timing,score);
+    public void PublishScoreChanged(int currentScore, int targetScore) =>
+        OnScoreChanged?.Invoke(currentScore, targetScore);
+    public void PublishHitResult(bool isHomerun, float distance, EHitTiming timing, int score,bool isCritical) =>
+         OnHitResult?.Invoke(isHomerun, distance, timing, score,isCritical);
 }

@@ -15,8 +15,9 @@ public class LookAtBallCamera : MonoBehaviour
         EventManager.Instance.OnBallHit += ActiveFollowCamera;
     }
     //타이밍만 사용.
-    void ActiveFollowCamera(EHitTiming timing, float f)
+    void ActiveFollowCamera(EHitTiming timing, float f, bool c)
     {
+        //크리일때 카메라 진동 줘도 좋을 듯.or perfect일 때
         Ball ball=HomerunDerbyManager.Instance.CurrentBall;
         followCamera.LookAt = ball.transform;
         followCamera.Priority = activePriority;
