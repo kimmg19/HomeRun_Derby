@@ -85,9 +85,7 @@ public class HitterManager : MonoBehaviour
 
     // 타격 판정 및 결과 처리
     public void CheckHit()
-    {
-        // 스윙 이벤트 발행
-        EventManager.Instance.PublishSwingOccurred();   
+    {        
 
         currentBall = HomerunDerbyManager.Instance.CurrentBall;
         if (currentBall == null) return;

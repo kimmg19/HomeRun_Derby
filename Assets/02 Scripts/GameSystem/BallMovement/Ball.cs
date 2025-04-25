@@ -83,7 +83,7 @@ public class Ball : MonoBehaviour
 
         while (elapsedTime <= duration)
         {
-            if(elapsedTime>=0.1f)trailRenderer.enabled = true;
+            if(elapsedTime>=0.2f)trailRenderer.enabled = true;
             float t = elapsedTime / duration;
 
             // 베지어 곡선을 따라 위치 계산
