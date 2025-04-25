@@ -765,6 +765,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 012c3c3cc3a61f24f998dc29d2e37820, type: 2}
   strikeChance: 0.8
   animator: {fileID: 0}
+  ball: {fileID: 0}
 --- !u!1 &1550606058766262984
 GameObject:
   m_ObjectHideFlags: 0
