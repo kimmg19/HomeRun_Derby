@@ -45,7 +45,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     // 타격 처리 및 점수 계산- 타격 성공 시에만
-    void ProcessHit(EHitTiming timing, float distance)
+    void ProcessHit(EHitTiming timing, float distance,bool isCritical)
     {
         bool isHomerun = calculator.IsHomerun(distance, homerunDistance);   // 홈런 판정
         int score = calculator.CalculateScore(                              // 점수 계산
@@ -53,7 +53,7 @@ public class ScoreManager : MonoBehaviour
             baseScore, distanceMultiplier, longDistanceThreshold
         );
         // 홈런 이벤트 발생
-        EventManager.Instance.PublishHitResult(isHomerun, distance, timing,score);
+        EventManager.Instance.PublishHitResult(isHomerun, distance, timing,score,isCritical);
 
         // 점수 추가
         AddScore(score);

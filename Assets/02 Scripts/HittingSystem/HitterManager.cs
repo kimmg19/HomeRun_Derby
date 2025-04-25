@@ -17,7 +17,7 @@ public class HitterManager : MonoBehaviour
     // 컴포넌트 참조
     [HideInInspector] public Animator animator;
 
-    // 유틸리티 클래스들
+    // 계산 클래스들
     HitTrajectoryCalculator trajectoryCalculator;
     HitQualityEvaluator qualityEvaluator;
     HitStatCalculator hitStatCalculator;
@@ -94,8 +94,7 @@ public class HitterManager : MonoBehaviour
 
         // 타이밍 판정
         float distanceFromHitPoint = hittingPoint.transform.position.z - currentBall.transform.position.z;
-        hitTiming = qualityEvaluator.EvaluateHitQuality(distanceFromHitPoint);
-        Debug.Log("타이밍 : " + hitTiming.ToString());
+        hitTiming = qualityEvaluator.EvaluateHitQuality(distanceFromHitPoint);        
 
         if (hitTiming == EHitTiming.Miss) return;   // 타격 타이밍 미스
 
@@ -123,25 +122,21 @@ public class HitterManager : MonoBehaviour
         float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);
         EventManager.Instance.PublishEnableBallData(true);
 
-        Debug.Log("power: " + power);
-        Debug.Log("CriticalChance: " + criticalChance);
+        //Debug.Log("power: " + power);
+        //Debug.Log("CriticalChance: " + criticalChance);
 
         // 크리티컬 판정
         bool isCritical = hitStatCalculator.CheckCriticalHit(criticalChance);
-        if (isCritical)
-        {
-            Debug.Log("Critical!");
-        }
+        
 
         // 타이밍에 따른 방향 계산
         float angle = trajectoryCalculator.CalculateHitAngle(hitTiming);
 
         // 스탯 기반 비거리 계산 (확률적)
-        float distance = hitStatCalculator.CalculateHitDistance(baseDistance, hitTiming, power, isCritical);
-        Debug.Log("Distance: " + distance);
+        float distance = hitStatCalculator.CalculateHitDistance(baseDistance, hitTiming, power, isCritical);        
 
         // 타격 이벤트 발행
-        EventManager.Instance.PublishBallHit(hitTiming, distance);
+        EventManager.Instance.PublishBallHit(hitTiming, distance,isCritical);
 
         // 공 궤적 제어점 계산
         Vector3 startPoint = currentBall.transform.position;

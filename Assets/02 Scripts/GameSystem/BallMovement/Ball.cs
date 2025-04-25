@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    TrailRenderer trailRenderer;
     public EPitchPosition PitchPosition { get; set; }
     int speed;
     Vector3 offset1;
@@ -11,6 +12,10 @@ public class Ball : MonoBehaviour
     Vector3 catchPoint;
     Coroutine activeCoroutine;
 
+    void Awake()
+    {
+        trailRenderer = GetComponent<TrailRenderer>();        
+    }
 
     public void Init(IPitchData iPitchData, EPitchPosition pitchPosition, int speed, Vector3 startPoint, Vector3 endPoint)
     {
@@ -31,6 +36,7 @@ public class Ball : MonoBehaviour
 
     IEnumerator ApplyPitchMovement(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
     {
+        trailRenderer.enabled = false;
         float duration = 1.3f; // 총 이동 시간(초)
         float speedFactor = speed / 100.0f; // 속도 계수 (높을수록 빠름)
         // 약간의 랜덤 회전 적용
@@ -72,12 +78,12 @@ public class Ball : MonoBehaviour
     {
         // 기존 투구 코루틴 중지
         CheckCoroutine();
-
         float duration = 3.0f;
         float elapsedTime = 0f;
 
         while (elapsedTime <= duration)
         {
+            if(elapsedTime>=0.1f)trailRenderer.enabled = true;
             float t = elapsedTime / duration;
 
             // 베지어 곡선을 따라 위치 계산
@@ -88,11 +94,10 @@ public class Ball : MonoBehaviour
 
         // 최종 위치 보정
         transform.position = endPoint;
-
+        trailRenderer.enabled = false;
         // 공 반환
         if (ObjectPoolManager.Instance != null)
         {
-            
             ObjectPoolManager.Instance.ReturnBall(this);
         }
     }
