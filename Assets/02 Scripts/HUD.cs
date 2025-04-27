@@ -18,6 +18,7 @@ public class HUD : MonoBehaviour
     [SerializeField] TextMeshProUGUI homerunText;       //홈런 여부
     [SerializeField] TextMeshProUGUI timingText;        //타격 타이밍
     [SerializeField] TextMeshProUGUI criticalText;      //크리 여부
+    [SerializeField] TextMeshProUGUI bigText;
 
     [SerializeField] GameObject scoreBox;
     [SerializeField] GameObject pitchDataBox;           //투구 데이터 UI
@@ -32,9 +33,9 @@ public class HUD : MonoBehaviour
         {
             EventManager.Instance.OnSwingCount += ChangeCount;
             EventManager.Instance.OnGameStart += DisableIntro;
-            EventManager.Instance.OnBallReleased += GetPitchData;
-            EventManager.Instance.EnableBallData += EnableBallData;
-            EventManager.Instance.OnGameReady += InitializeUI;
+            EventManager.Instance.OnSetBallData += GetPitchData;
+            EventManager.Instance.OnEnablePitchData += ShowPitchData;
+            EventManager.Instance.OnGameReady += InitializeUIAtStart;
             EventManager.Instance.OnScoreChanged += UpdateScore;
             EventManager.Instance.OnHitResult += ShowHitResult;
         }
@@ -54,25 +55,31 @@ public class HUD : MonoBehaviour
         if (homerunText == null) return;
         if (pitchDataBox == null) return;
         if (hitDataBox == null) return;
-        if(criticalText==null) return;
-        if(scoreBox == null) return;
+        if (criticalText == null) return;
+        if (scoreBox == null) return;
+        if (bigText == null) return;
     }
 
 
-    void InitializeUI()
+    void InitializeUIAtStart()
     {
         // 게임 시작시 UI 초기화
         currentScoreText.text = "0";
-        bestScoreText.text = $"{bestScore}";        
+        bestScoreText.text = $"{bestScore}";
         bestScore = PlayerPrefs.GetInt("BestScore", 0); // 최고 점수 로드
         bestScoreText.text = $"{bestScore}";
         maxCount = HomerunDerbyManager.Instance != null ?
             HomerunDerbyManager.Instance.SwingCount : 15;
         pitchDataBox.SetActive(false);
         hitDataBox.SetActive(false);
-        scoreBox.SetActive(false);        
+        scoreBox.SetActive(false);
     }
-
+    void InitDuringGame()
+    {
+        criticalText.text = "";
+        bigText.text = "";
+        earnedScoreText.text = "";
+    }
     void ChangeCount(int count)
     {
         swingChanceText.text = $"{count} / {maxCount}";
@@ -90,9 +97,10 @@ public class HUD : MonoBehaviour
         pitchTypeText.text = type.ToString();
     }
 
-    void EnableBallData(bool b)
+    void ShowPitchData(EPitchPosition p)
     {
-        pitchDataBox.SetActive(b);
+        pitchDataBox.SetActive(true);
+        StartCoroutine(HideHitDataText(pitchDataBox));
     }
 
     // 현재 점수 업데이트. 현재 점수(타격 직전까지의), 타격 후 점수, 타격으로 얻은 점수 순.
@@ -119,15 +127,21 @@ public class HUD : MonoBehaviour
     }
 
     // 타격 결과 표시
-    void ShowHitResult(bool isHomerun, float distance, EHitTiming timing, int score, bool isCritical)
+    void ShowHitResult(bool isHomerun, float distance, EHitTiming timing, int score, bool isCritical, bool isBig)
     {
-        if (isCritical)  criticalText.text = "+Critical!!"; 
-        else criticalText.text = "";
+        if (isCritical) criticalText.text = "+Critical!!";
+        if (isBig) bigText.text = "+Big!!!";
+        if (score > 0) earnedScoreText.text = $"+{score}";
+
         distanceText.text = $"{distance:F1}m";
         timingText.text = timing.ToString();
-        earnedScoreText.text = $"+{score}";
+
         // 홈런 알림 표시
-        if (isHomerun)
+        if (timing == EHitTiming.Miss)
+        {
+            homerunText.text = "OOPS!!";
+        }
+        else if (isHomerun)
         {
             homerunText.color = Color.red;
             homerunText.text = "HOMERUN!!!!";
@@ -137,16 +151,17 @@ public class HUD : MonoBehaviour
             homerunText.color = Color.red;
             homerunText.text = "Hit!";
         }
-        scoreBox.SetActive(true);
         hitDataBox.SetActive(true);
-        Invoke("HideHitDataText", 3.0f);
+        scoreBox.SetActive(true);
+        StartCoroutine(HideHitDataText(scoreBox));
+        StartCoroutine(HideHitDataText(hitDataBox));
     }
 
-    void HideHitDataText()
+    IEnumerator HideHitDataText(GameObject box)
     {
-        hitDataBox.SetActive(false);
-        scoreBox.SetActive(false);
-
+        yield return new WaitForSeconds(3);
+        box.SetActive(false);
+        InitDuringGame();
     }
 
     void OnDisable()
@@ -155,9 +170,9 @@ public class HUD : MonoBehaviour
         {
             EventManager.Instance.OnSwingCount -= ChangeCount;
             EventManager.Instance.OnGameStart -= DisableIntro;
-            EventManager.Instance.OnBallReleased -= GetPitchData;
-            EventManager.Instance.EnableBallData -= EnableBallData;
-            EventManager.Instance.OnGameReady -= InitializeUI;
+            EventManager.Instance.OnSetBallData -= GetPitchData;
+            EventManager.Instance.OnEnablePitchData -= ShowPitchData;
+            EventManager.Instance.OnGameReady -= InitializeUIAtStart;
             EventManager.Instance.OnScoreChanged -= UpdateScore;
             EventManager.Instance.OnHitResult -= ShowHitResult;
         }

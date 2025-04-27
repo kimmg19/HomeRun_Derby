@@ -6,6 +6,7 @@ public class Ball : MonoBehaviour
     TrailRenderer trailRenderer;
     public EPitchPosition PitchPosition { get; set; }
     int speed;
+    bool isTriggerd;
     Vector3 offset1;
     Vector3 offset2;
     Vector3 startPoint;
@@ -25,6 +26,7 @@ public class Ball : MonoBehaviour
         this.catchPoint = endPoint;
         offset1 = startPoint + iPitchData.Offset1;
         offset2 = endPoint + iPitchData.Offset2;
+        isTriggerd = false;
     }
 
     public void Pitch()
@@ -60,7 +62,6 @@ public class Ball : MonoBehaviour
         }
         // 최종 위치 보정
         transform.position = p4;
-        EventManager.Instance.PublishEnableBallData(true);
         // 잠시 대기 후 공 반환
         yield return new WaitForSeconds(2f);
 
@@ -94,6 +95,7 @@ public class Ball : MonoBehaviour
 
         // 최종 위치 보정
         transform.position = endPoint;
+        
         trailRenderer.enabled = false;
         // 공 반환
         if (ObjectPoolManager.Instance != null)
@@ -106,6 +108,14 @@ public class Ball : MonoBehaviour
         if (activeCoroutine != null)
         {
             StopCoroutine(activeCoroutine);
+        }
+    }
+    void OnTriggerEnter(Collider other)
+    {
+
+        if (other.CompareTag("Zone") && !isTriggerd){
+            isTriggerd = true;
+            EventManager.Instance.PublishOnEnablePitchData(PitchPosition);
         }
     }
     void OnDisable()
