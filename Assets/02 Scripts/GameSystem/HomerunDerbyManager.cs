@@ -84,20 +84,20 @@ public class HomerunDerbyManager : MonoBehaviour
         else return;
     }
 
-    private void TouchAndStart()
+    void TouchAndStart()
     {
         print("Game Start");
         GameState = EGameState.Playing;
         pitchCoroutine = StartCoroutine(StartPitching());
     }
 
-    private void GameIsReady()
+    void GameIsReady()
     {
         GameState = EGameState.Intro;
         print("Loading Complete");
     }
 
-    private void GameFinished()
+    void GameFinished()
     {
         GameState = EGameState.Finish;
         print("Finish");

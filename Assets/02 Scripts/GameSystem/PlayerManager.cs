@@ -5,10 +5,10 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] PlayerStatSO baseStats;
     [SerializeField] BatItemSO defaultBat;
 
-    public BatItemSO equippedBat { get; private set; }
-    public int powerValue { get; private set; } //플레이어 파워 능력치
-    public int criticalValue { get; private set; }
-    public int currency { get; private set; } //재화
+    public BatItemSO equippedBat { get;  set; }
+    public int powerValue { get;  set; } //플레이어 파워 능력치
+    public int criticalValue { get;  set; }
+    public int currency { get;  set; } //재화
 
     // 현재 적용된 최종 스탯 계산
     public float CurrentPower => baseStats.BasePower + powerValue + (defaultBat?.powerBonus ?? 0);
