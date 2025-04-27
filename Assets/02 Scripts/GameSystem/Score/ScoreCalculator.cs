@@ -22,7 +22,6 @@ public class ScoreCalculator
         if (timing == EHitTiming.Perfect)
         {
             score *= 2;
-            Debug.Log("Perfect 타이밍! 점수 2배!");
         }
 
         // 3. 홈런 여부
@@ -34,7 +33,6 @@ public class ScoreCalculator
             if (distance >= longDistanceThreshold)
             {
                 score *= 2;
-                Debug.Log($"장거리 홈런! ({distance}m) 점수 2배!");
             }
         }
 
@@ -48,7 +46,7 @@ public class ScoreCalculator
     }
 
     // 장거리 홈런 판정 메서드
-    public bool IsLongHomerun(float distance, float longDistanceThreshold)
+    public bool IsBigHomerun(float distance, float longDistanceThreshold)
     {
         return distance >= longDistanceThreshold;
     }

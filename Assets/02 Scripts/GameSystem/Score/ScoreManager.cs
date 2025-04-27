@@ -48,12 +48,13 @@ public class ScoreManager : MonoBehaviour
     void ProcessHit(EHitTiming timing, float distance,bool isCritical)
     {
         bool isHomerun = calculator.IsHomerun(distance, homerunDistance);   // 홈런 판정
+        bool isBighomerun=calculator.IsBigHomerun(distance, longDistanceThreshold);
         int score = calculator.CalculateScore(                              // 점수 계산
             timing, distance, isHomerun,
             baseScore, distanceMultiplier, longDistanceThreshold
         );
-        // 홈런 이벤트 발생
-        EventManager.Instance.PublishHitResult(isHomerun, distance, timing,score,isCritical);
+        // 타격 이벤트 발생-UI에 표시
+        EventManager.Instance.PublishHitResult(isHomerun, distance, timing,score,isCritical, isBighomerun);
 
         // 점수 추가
         AddScore(score);

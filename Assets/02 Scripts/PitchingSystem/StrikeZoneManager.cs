@@ -45,7 +45,6 @@ public class StrikeZoneManager : MonoBehaviour
     Vector3 GetStrikePosition()
     {
         Vector3 center = catchPoint.position;
-
         return new Vector3(
             Random.Range(center.x - strikeZoneHalfWidth, center.x + strikeZoneHalfWidth),
             Random.Range(center.y - strikeZoneHalfHeight, center.y + strikeZoneHalfHeight),
