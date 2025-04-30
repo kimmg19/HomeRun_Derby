@@ -15,7 +15,7 @@ public class HomerunDerbyManager : MonoBehaviour
     public EGameState GameState { get; set; }
     Coroutine pitchCoroutine;
     public Ball CurrentBall { get; set; } // 현재 투수가 던진 공
-    public int SwingCount { get; private set; } = 15;
+    public int SwingCount { get; private set; } = 1;
     [ReadOnly] public int currentDifficulty = 1;
     [SerializeField, ReadOnly] float pitchClock = 8;
 
@@ -59,7 +59,7 @@ public class HomerunDerbyManager : MonoBehaviour
         else if (SwingCount > 3 && SwingCount <= 6) currentDifficulty = 4;
         else if (SwingCount <= 3) currentDifficulty = 5;
         // 변경된 값을 UI 등에 알림
-        EventManager.Instance.PublishSwingCount(SwingCount);
+        EventManager.Instance.PublishSwingCount(SwingCount);        
     }
 
     IEnumerator StartPitching()

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class HUD : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI[] uiTexts;
+    [SerializeField] GameObject[] uiObjects;
+
     [SerializeField] TextMeshProUGUI introText;         //터치후 스타트 텍스트
     [SerializeField] TextMeshProUGUI swingChanceText;   //스윙 기회
     [SerializeField] TextMeshProUGUI bestScoreText;     //총 최고점수
@@ -23,6 +26,7 @@ public class HUD : MonoBehaviour
     [SerializeField] GameObject scoreBox;
     [SerializeField] GameObject pitchDataBox;           //투구 데이터 UI
     [SerializeField] GameObject hitDataBox;             //타격 데이터 UI
+    [SerializeField] GameObject gameOverPanel;
 
     int maxCount;
     int bestScore;
@@ -38,29 +42,36 @@ public class HUD : MonoBehaviour
             EventManager.Instance.OnGameReady += InitializeUIAtStart;
             EventManager.Instance.OnScoreChanged += UpdateScore;
             EventManager.Instance.OnHitResult += ShowHitResult;
+            EventManager.Instance.OnGameFinished += GameOver;
+
         }
         else Debug.LogError("HUD 이벤트 등록 실패");
     }
     void Awake()
     {
-        if (introText == null) return;
-        if (swingChanceText == null) return;
-        if (bestScoreText == null) return;
-        if (currentScoreText == null) return;
-        if (earnedScoreText == null) return;
-        if (speedText == null) return;
-        if (pitchTypeText == null) return;
-        if (pitchPosText == null) return;
-        if (distanceText == null) return;
-        if (homerunText == null) return;
-        if (pitchDataBox == null) return;
-        if (hitDataBox == null) return;
-        if (criticalText == null) return;
-        if (scoreBox == null) return;
-        if (bigText == null) return;
+        ValidateUI(introText, nameof(introText));
+        ValidateUI(swingChanceText, nameof(swingChanceText));
+        ValidateUI(bestScoreText, nameof(bestScoreText));
+        ValidateUI(currentScoreText, nameof(currentScoreText));
+        ValidateUI(earnedScoreText, nameof(earnedScoreText));
+        ValidateUI(speedText, nameof(speedText));
+        ValidateUI(pitchTypeText, nameof(pitchTypeText));
+        ValidateUI(pitchPosText, nameof(pitchPosText));
+        ValidateUI(distanceText, nameof(distanceText));
+        ValidateUI(homerunText, nameof(homerunText));
+        ValidateUI(timingText, nameof(timingText));
+        ValidateUI(criticalText, nameof(criticalText));
+        ValidateUI(bigText, nameof(bigText));
+        ValidateUI(scoreBox, nameof(scoreBox));
+        ValidateUI(pitchDataBox, nameof(pitchDataBox));
+        ValidateUI(hitDataBox, nameof(hitDataBox));
+        ValidateUI(gameOverPanel, nameof(gameOverPanel));
     }
-
-
+    void ValidateUI(Object obj, string name)
+    {
+        if (obj == null)
+            Debug.LogError($"{name} 누락");
+    }
     void InitializeUIAtStart()
     {
         // 게임 시작시 UI 초기화
@@ -73,7 +84,9 @@ public class HUD : MonoBehaviour
         pitchDataBox.SetActive(false);
         hitDataBox.SetActive(false);
         scoreBox.SetActive(false);
+        gameOverPanel.SetActive(false);
     }
+    //게임 중 텍스트 초기화
     void InitDuringGame()
     {
         criticalText.text = "";
@@ -163,11 +176,15 @@ public class HUD : MonoBehaviour
         box.SetActive(false);
         InitDuringGame();
     }
-
+    void GameOver()
+    {
+        gameOverPanel.SetActive(true);
+    }
     void OnDisable()
     {
         if (EventManager.Instance != null)
         {
+            EventManager.Instance.OnGameFinished -= GameOver;
             EventManager.Instance.OnSwingCount -= ChangeCount;
             EventManager.Instance.OnGameStart -= DisableIntro;
             EventManager.Instance.OnSetBallData -= GetPitchData;
