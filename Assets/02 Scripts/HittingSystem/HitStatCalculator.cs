@@ -8,7 +8,6 @@ public class HitStatCalculator:MonoBehaviour
     {
         // 선구안 스탯이 높을수록 볼 타격 성공률 증가
         float successRate = eyeSight / 100f;
-        Debug.Log("볼 타격 성공률: "+successRate);
         // 최대 50% 제한
         successRate = Mathf.Clamp(successRate, 0f, 0.5f);
 
