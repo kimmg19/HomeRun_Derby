@@ -3,11 +3,8 @@ using TMPro;
 using UnityEngine;
 
 public class HUD : MonoBehaviour
-{
-    [SerializeField] TextMeshProUGUI[] uiTexts;
-    [SerializeField] GameObject[] uiObjects;
+{    
 
-    [SerializeField] TextMeshProUGUI introText;         //터치후 스타트 텍스트
     [SerializeField] TextMeshProUGUI swingChanceText;   //스윙 기회
     [SerializeField] TextMeshProUGUI bestScoreText;     //총 최고점수
     [SerializeField] TextMeshProUGUI currentScoreText;  //총 현재점수
@@ -23,6 +20,7 @@ public class HUD : MonoBehaviour
     [SerializeField] TextMeshProUGUI criticalText;      //크리 여부
     [SerializeField] TextMeshProUGUI bigText;
 
+    [SerializeField] GameObject introBox;         //터치후 스타트
     [SerializeField] GameObject scoreBox;
     [SerializeField] GameObject pitchDataBox;           //투구 데이터 UI
     [SerializeField] GameObject hitDataBox;             //타격 데이터 UI
@@ -36,7 +34,6 @@ public class HUD : MonoBehaviour
         if (EventManager.Instance != null)
         {
             EventManager.Instance.OnSwingCount += ChangeCount;
-            EventManager.Instance.OnGameStart += DisableIntro;
             EventManager.Instance.OnSetBallData += GetPitchData;
             EventManager.Instance.OnEnablePitchData += ShowPitchData;
             EventManager.Instance.OnGameReady += InitializeUIAtStart;
@@ -49,7 +46,7 @@ public class HUD : MonoBehaviour
     }
     void Awake()
     {
-        ValidateUI(introText, nameof(introText));
+        ValidateUI(introBox, nameof(introBox));
         ValidateUI(swingChanceText, nameof(swingChanceText));
         ValidateUI(bestScoreText, nameof(bestScoreText));
         ValidateUI(currentScoreText, nameof(currentScoreText));
@@ -85,6 +82,13 @@ public class HUD : MonoBehaviour
         hitDataBox.SetActive(false);
         scoreBox.SetActive(false);
         gameOverPanel.SetActive(false);
+        introBox.SetActive(true);
+        InitDuringGame();
+    }
+    public void OnIntroTextClicked()
+    {
+        EventManager.Instance.PublishGameStart();
+        introBox.SetActive(false);
     }
     //게임 중 텍스트 초기화
     void InitDuringGame()
@@ -97,11 +101,7 @@ public class HUD : MonoBehaviour
     {
         swingChanceText.text = $"{count} / {maxCount}";
     }
-
-    void DisableIntro()
-    {
-        introText.enabled = false;
-    }
+    
 
     void GetPitchData(float speed, EPitchPosition position, EPitchType type)
     {
@@ -186,7 +186,6 @@ public class HUD : MonoBehaviour
         {
             EventManager.Instance.OnGameFinished -= GameOver;
             EventManager.Instance.OnSwingCount -= ChangeCount;
-            EventManager.Instance.OnGameStart -= DisableIntro;
             EventManager.Instance.OnSetBallData -= GetPitchData;
             EventManager.Instance.OnEnablePitchData -= ShowPitchData;
             EventManager.Instance.OnGameReady -= InitializeUIAtStart;
