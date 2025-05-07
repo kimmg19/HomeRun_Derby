@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbb5b3c0e0749847a5c3bd8434cccb7, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  basePower: 10
+  basePower: 15
   baseEyeSight: 10
   baseCriticalChance: 5

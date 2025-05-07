@@ -81,10 +81,10 @@ public class HomerunDerbyManager : MonoBehaviour
         var touch = Touchscreen.current.primaryTouch;
         int fingerId = touch.touchId.ReadValue();
 
-        if (EventSystem.current.IsPointerOverGameObject(fingerId)) { print("½ºÀ®2"); return; }
+        if (EventSystem.current.IsPointerOverGameObject(fingerId)) {  return; }
 
         if (GameState == EGameState.Playing) EventManager.Instance.PublishSwing();
-        else print("½ºÀ®4");
+        
     }
 
     IEnumerator Swing()

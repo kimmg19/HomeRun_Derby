@@ -33,6 +33,7 @@ public class EventManager : MonoBehaviour
     public event Action<int, int> OnScoreChanged;
     public event Action<bool, float, EHitTiming, int,bool,bool> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
 
+    public event Action<Transform,EHitTiming> OnHitEffect;
     void Awake()
     {
         // 싱글톤 인스턴스 설정
@@ -71,4 +72,6 @@ public class EventManager : MonoBehaviour
         OnScoreChanged?.Invoke(currentScore, targetScore);
     public void PublishHitResult(bool isHomerun, float d, EHitTiming t, int s,bool c,bool b) =>
          OnHitResult?.Invoke(isHomerun, d, t, s, c, b);
+
+    public void PublishHitEffect(Transform hitPosition,EHitTiming timing)=>OnHitEffect?.Invoke(hitPosition,timing);
 }

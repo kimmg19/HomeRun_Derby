@@ -117,6 +117,7 @@ public class HitterManager : MonoBehaviour
     // 타격 결과 처리
     void ProcessHit()
     {
+        SoundManager.Instance.PlaySFX(SoundManager.ESfx.Hit);
         // 스탯 가져오기
         float power = GetPlayerStat(pm => pm.CurrentPower);
         float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);
@@ -134,6 +135,7 @@ public class HitterManager : MonoBehaviour
 
         // 타격 이벤트 발행
         EventManager.Instance.PublishBallHit(hitTiming, distance, isCritical);
+        EventManager.Instance.PublishHitEffect(currentBall.transform,hitTiming);
 
         // 공 궤적 제어점 계산
         Vector3 startPoint = currentBall.transform.position;
