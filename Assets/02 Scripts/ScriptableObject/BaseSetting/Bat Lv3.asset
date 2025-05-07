@@ -15,6 +15,6 @@ MonoBehaviour:
   batName: Bat Lv 3
   batMaterial: {fileID: 2100000, guid: 795ccf2773b68114b89678573c1ab54d, type: 2}
   cost: 2000
-  powerBonus: 10
+  powerBonus: 30
   eyeSightBonus: 20
-  criticalBonus: 15
+  criticalBonus: 20
