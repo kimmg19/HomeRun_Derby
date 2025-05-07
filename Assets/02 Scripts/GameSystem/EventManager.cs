@@ -18,21 +18,22 @@ public class EventManager : MonoBehaviour
     public event Action OnGameStart;
 
     // 투수 관련 이벤트
-    public event Action<bool> EnableBallData;
+    public event Action<EPitchPosition> OnEnablePitchData;
     public event Action<int> OnPitchStart;
     public event Action OnWindUpStart;
-    public event Action<float, EPitchPosition, EPitchType> OnBallReleased;
+    public event Action<float, EPitchPosition, EPitchType> OnSetBallData;
 
     // 타자 관련 이벤트
     public event Action OnSwingStart;
     public event Action<int> OnSwingCount;
     public event Action<EHitTiming, float, bool> OnBallHit;
-    public event Action OnSwingOccurred;
+    public event Action OnBallSwing;
 
     // 점수 관련 이벤트 추가
     public event Action<int, int> OnScoreChanged;
-    public event Action<bool, float, EHitTiming, int,bool> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
+    public event Action<bool, float, EHitTiming, int,bool,bool> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
 
+    public event Action<Transform,EHitTiming> OnHitEffect;
     void Awake()
     {
         // 싱글톤 인스턴스 설정
@@ -49,26 +50,28 @@ public class EventManager : MonoBehaviour
 
     public void PublishReloadPlayGround() => OnReloadPlayGroud?.Invoke();
 
-    // 이벤트 발행 메서드들
+    // 게임
     public void PublishGameReady() => OnGameReady?.Invoke();
     public void PublishGameStart() => OnGameStart?.Invoke();
     public void PublishGameFinished() => OnGameFinished?.Invoke();
-
-    public void PublishEnableBallData(bool b) => EnableBallData?.Invoke(b);
+    //투구
+    public void PublishOnEnablePitchData(EPitchPosition pos) => OnEnablePitchData?.Invoke(pos);
     public void PublishPitch(int currentDifficulty) => OnPitchStart?.Invoke(currentDifficulty);
     public void PublishWindUpStart() => OnWindUpStart?.Invoke();
-    public void PublishBallReleased(float speed, EPitchPosition position, EPitchType curPitchType) =>
-       OnBallReleased?.Invoke(speed, position, curPitchType);
-
-    public void PublishSwingOccurred() => OnSwingOccurred?.Invoke();
+    public void PublishOnSetBallData(float speed, EPitchPosition position, EPitchType curPitchType) =>
+       OnSetBallData?.Invoke(speed, position, curPitchType);
+    //타격
+    public void PublishOnBallSwing() => OnBallSwing?.Invoke();
     public void PublishSwingCount(int count) => OnSwingCount?.Invoke(count);
     public void PublishSwing() => OnSwingStart?.Invoke();
     public void PublishBallHit(EHitTiming timing, float distance, bool isCritical) =>
         OnBallHit?.Invoke(timing, distance, isCritical);
 
-    // 점수 관련 이벤트 발행 메서드
+    // 점수 및 UI
     public void PublishScoreChanged(int currentScore, int targetScore) =>
         OnScoreChanged?.Invoke(currentScore, targetScore);
-    public void PublishHitResult(bool isHomerun, float distance, EHitTiming timing, int score,bool isCritical) =>
-         OnHitResult?.Invoke(isHomerun, distance, timing, score,isCritical);
+    public void PublishHitResult(bool isHomerun, float d, EHitTiming t, int s,bool c,bool b) =>
+         OnHitResult?.Invoke(isHomerun, d, t, s, c, b);
+
+    public void PublishHitEffect(Transform hitPosition,EHitTiming timing)=>OnHitEffect?.Invoke(hitPosition,timing);
 }

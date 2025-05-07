@@ -5,7 +5,7 @@ public class HitterManager : MonoBehaviour
 {
     [Header("타격 설정")]
     [SerializeField] Transform hittingPoint;
-    [SerializeField,ReadOnly] float baseDistance = 40f;
+    [SerializeField, ReadOnly] float baseDistance = 40f;
     [SerializeField, Range(5f, 25f)] float maxHeight = 15f;
 
     [Header("플레이어 스탯")]
@@ -29,7 +29,6 @@ public class HitterManager : MonoBehaviour
     HitterHitState hitterHitState;
 
     EHitTiming hitTiming;
-
     void Awake()
     {
         // 컴포넌트 초기화
@@ -85,20 +84,19 @@ public class HitterManager : MonoBehaviour
 
     // 타격 판정 및 결과 처리
     public void CheckHit()
-    {        
-
+    {
         currentBall = HomerunDerbyManager.Instance.CurrentBall;
         if (currentBall == null) return;
 
         // 타이밍 판정
         float distanceFromHitPoint = hittingPoint.transform.position.z - currentBall.transform.position.z;
-        hitTiming = qualityEvaluator.EvaluateHitQuality(distanceFromHitPoint);        
-
-        if (hitTiming == EHitTiming.Miss) return;   // 타격 타이밍 미스
+        hitTiming = qualityEvaluator.EvaluateHitQuality(distanceFromHitPoint);
 
         // 볼 판정 타격 성공 여부 (선구안 영향)
         if (currentBall.PitchPosition == EPitchPosition.BALL)
         {
+            EventManager.Instance.PublishOnBallSwing();
+
             float eyeSight = GetPlayerStat(pm => pm.CurrentEyeSight);
 
             if (!hitStatCalculator.CheckBallHitSuccess(eyeSight))
@@ -107,7 +105,11 @@ public class HitterManager : MonoBehaviour
                 return;
             }
         }
-
+        if (hitTiming == EHitTiming.Miss)
+        {
+            EventManager.Instance.PublishHitResult(false, 0, hitTiming, 0, false,false);
+            return;
+        }   // 타격 타이밍 미스
         // 타격 성공 처리
         ProcessHit();
     }
@@ -115,26 +117,25 @@ public class HitterManager : MonoBehaviour
     // 타격 결과 처리
     void ProcessHit()
     {
+        SoundManager.Instance.PlaySFX(SoundManager.ESfx.Hit);
         // 스탯 가져오기
         float power = GetPlayerStat(pm => pm.CurrentPower);
         float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);
-        EventManager.Instance.PublishEnableBallData(true);
 
-        //Debug.Log("power: " + power);
-        //Debug.Log("CriticalChance: " + criticalChance);
 
         // 크리티컬 판정
         bool isCritical = hitStatCalculator.CheckCriticalHit(criticalChance);
-        
+
 
         // 타이밍에 따른 방향 계산
         float angle = trajectoryCalculator.CalculateHitAngle(hitTiming);
 
         // 스탯 기반 비거리 계산 (확률적)
-        float distance = hitStatCalculator.CalculateHitDistance(baseDistance, hitTiming, power, isCritical);        
+        float distance = hitStatCalculator.CalculateHitDistance(baseDistance, hitTiming, power, isCritical);
 
         // 타격 이벤트 발행
-        EventManager.Instance.PublishBallHit(hitTiming, distance,isCritical);
+        EventManager.Instance.PublishBallHit(hitTiming, distance, isCritical);
+        EventManager.Instance.PublishHitEffect(currentBall.transform,hitTiming);
 
         // 공 궤적 제어점 계산
         Vector3 startPoint = currentBall.transform.position;
@@ -162,10 +163,10 @@ public class HitterManager : MonoBehaviour
 
     // 투수 와인드업 시작 시 호출되는 이벤트
     public void OnReady()
-    {        
+    {
         ChangeState(hitterHitReadyState);
     }
-    
+
 
     // 애니메이션 이벤트에서 호출되는 메소드들
     public void OnToSwingReady()

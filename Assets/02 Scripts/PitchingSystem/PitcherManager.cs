@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public enum PitchState
@@ -11,13 +10,13 @@ public class PitcherManager : MonoBehaviour
 {
     [Header("투구 설정")]
     [SerializeField] PitchTypeDataSO[] pitchTypeDataSO;
-    [SerializeField,ReadOnly] float strikeChance=0.8f;
+    [SerializeField] float strikeChance = 0f;
     [HideInInspector] public Animator animator;
     StrikeZoneManager strikeZoneManager;
     BallSpeedManager ballSpeedManager;
 
     // 투구 데이터
-    [SerializeField]Ball ball;
+    [SerializeField] Ball ball;
     Vector3 catchPoint;
     float finalSpeed;
     public EPitchPosition PitchPosition { get; set; }
@@ -52,13 +51,10 @@ public class PitcherManager : MonoBehaviour
         }
         else Debug.LogError("이벤트 등록 실패");
     }
-   
+
     // 투구 시작 - 홈런더비 매니저에서 호출
     public void Pitching(int currentDifficulty)
     {
-        /*if (ball != null)
-            ObjectPoolManager.Instance.ReturnBall(ball);*/
-        EventManager.Instance.PublishEnableBallData(false);
 
         // 구종 선택과 투구 설정
         curPitchType = pitchTypeDataSO[UnityEngine.Random.Range(0, pitchTypeDataSO.Length)];
@@ -85,14 +81,14 @@ public class PitcherManager : MonoBehaviour
 
     // 투구 실행 - 애니메이션 이벤트나 상태에서 호출
     public void ExecutePitch()
-    {       
+    {
 
         // 공 생성 및 초기화
         ball = ObjectPoolManager.Instance.GetBall();
         HomerunDerbyManager.Instance.CurrentBall = ball;
 
         // 공 정보 이벤트에 보냄-ui에서 표시.
-        EventManager.Instance.PublishBallReleased(finalSpeed, PitchPosition, curPitchType.pitchType);
+        EventManager.Instance.PublishOnSetBallData(finalSpeed, PitchPosition, curPitchType.pitchType);
 
         // 투구 시작
         ball.Init(pitchData, PitchPosition, (int)finalSpeed, ball.transform.position, catchPoint);

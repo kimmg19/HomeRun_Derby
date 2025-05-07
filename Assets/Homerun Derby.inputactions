@@ -6,18 +6,9 @@
             "id": "0c524300-f9af-43a3-bdd2-ed844ccf54d2",
             "actions": [
                 {
-                    "name": "Touch",
+                    "name": "Swing",
                     "type": "Button",
                     "id": "1a4c154e-386a-4529-a8e5-bc3bb324f0fc",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Next",
-                    "type": "Button",
-                    "id": "5c1e512b-d997-4b7a-a8cc-73980b6b4664",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -32,7 +23,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Touch",
+                    "action": "Swing",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -43,7 +34,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Touch",
+                    "action": "Swing",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -54,7 +45,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Touch",
-                    "action": "Touch",
+                    "action": "Swing",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -65,7 +56,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
-                    "action": "Touch",
+                    "action": "Swing",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -76,18 +67,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Touch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1e02d337-de04-4b7a-93ac-f4531ef98ca0",
-                    "path": "<Keyboard>/backspace",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Next",
+                    "action": "Swing",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
