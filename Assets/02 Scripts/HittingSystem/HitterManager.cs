@@ -87,7 +87,7 @@ public class HitterManager : MonoBehaviour
     {
         currentBall = HomerunDerbyManager.Instance.CurrentBall;
         if (currentBall == null) return;
-
+        SoundManager.Instance.PlaySFX(SoundManager.ESfx.Swing);
         // 타이밍 판정
         float distanceFromHitPoint = hittingPoint.transform.position.z - currentBall.transform.position.z;
         hitTiming = qualityEvaluator.EvaluateHitQuality(distanceFromHitPoint);
@@ -157,7 +157,7 @@ public class HitterManager : MonoBehaviour
 
     // 외부 이벤트에 의한 상태 전환 메소드
     public void Swing()
-    {
+    {        
         ChangeState(hitterHitState);
     }
 

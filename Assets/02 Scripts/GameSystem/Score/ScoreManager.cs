@@ -49,6 +49,10 @@ public class ScoreManager : MonoBehaviour
     {
         bool isHomerun = calculator.IsHomerun(distance, homerunDistance);   // 홈런 판정
         bool isBighomerun=calculator.IsBigHomerun(distance, longDistanceThreshold);
+        if (isHomerun || isBighomerun)
+        {
+            SoundManager.Instance.PlaySFX(SoundManager.ESfx.Homerun,0.3f);
+        }
         int score = calculator.CalculateScore(                              // 점수 계산
             timing, distance, isHomerun,
             baseScore, distanceMultiplier, longDistanceThreshold

@@ -82,7 +82,7 @@ public class PitcherManager : MonoBehaviour
     // 투구 실행 - 애니메이션 이벤트나 상태에서 호출
     public void ExecutePitch()
     {
-
+        SoundManager.Instance.PlaySFX(SoundManager.ESfx.Pitching,0.7f);
         // 공 생성 및 초기화
         ball = ObjectPoolManager.Instance.GetBall();
         HomerunDerbyManager.Instance.CurrentBall = ball;
