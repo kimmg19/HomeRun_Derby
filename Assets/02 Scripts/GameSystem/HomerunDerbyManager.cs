@@ -77,6 +77,7 @@ public class HomerunDerbyManager : MonoBehaviour
     // 터치 처리
     public void OnSwing()
     {
+        print("스윙 이벤트");
         //StartCoroutine(Swing());
         var touch = Touchscreen.current.primaryTouch;
         int fingerId = touch.touchId.ReadValue();
@@ -112,6 +113,7 @@ public class HomerunDerbyManager : MonoBehaviour
     void GameIsReady()
     {
         GameState = EGameState.Intro;
+        SoundManager.Instance.PlayBGM(SoundManager.EBgm.Crowd);
         print("Loading Complete");
     }
 

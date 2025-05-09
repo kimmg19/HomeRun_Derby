@@ -18,7 +18,7 @@ public class NewBehaviourScript : MonoBehaviour
     }
     public void Test()
     {
-        SoundManager.Instance.StopBgm();
+        
         LoadingSceneController.Instance.LoadScene("PlayGround");
     }
 }

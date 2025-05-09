@@ -46,11 +46,11 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 0.3
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 100
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -172,7 +172,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -304,7 +304,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxClips:
   - {fileID: 8300000, guid: c2e966690dcb72649b1fccceebd34390, type: 3}
+  - {fileID: 8300000, guid: 84a547cdf3c896643b0b713bfe836e5e, type: 3}
+  - {fileID: 8300000, guid: a526cd7360a31b849a6852eb7caa13d9, type: 3}
+  - {fileID: 8300000, guid: 01aa161dde2ae84449ee4278755c42a8, type: 3}
   bgmClips:
   - {fileID: 8300000, guid: 9041dc4fa253c4a10847f31bab75aab5, type: 3}
+  - {fileID: 8300000, guid: 8522bbfab8d6e46468789f513af7d2c8, type: 3}
   sfxSource: {fileID: 6621483997920232385}
   bgmSource: {fileID: 1501419218701549138}

@@ -23,7 +23,6 @@ public class LoadingSceneController : MonoBehaviour
                     instance = Create();
                 }
             }
-            print(instance);
             return instance;
         }
     }
@@ -90,6 +89,7 @@ public class LoadingSceneController : MonoBehaviour
             StartCoroutine(Fade(false));
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
+        SoundManager.Instance.StopBgm();
     }
     IEnumerator Fade(bool isFadeIn)
     {

@@ -1,35 +1,56 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
+    // ½Ì±ÛÅæ ÆÐÅÏ ±¸Çö
     private static SoundManager instance;
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
     public static SoundManager Instance
     {
         get
         {
-            if (instance == null) return null;
+            if (instance == null)
+            {
+                var obj = FindAnyObjectByType<SoundManager>();
+                if (obj != null)
+                {
+                    instance = obj;
+                }
+                else
+                {
+                    instance = Create();
+                }
+            }
             return instance;
         }
     }
+
+    static SoundManager Create()
+    {
+        return Instantiate(Resources.Load<SoundManager>("SoundManager"));
+    }
+
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+
+    }
     public enum ESfx
     {
-        Hit
+        Hit=0,
+        Homerun,
+        Pitching,
+        Swing
     }
     public enum EBgm
     {
-        Lobby
+        Lobby=0,
+        Crowd
     }
     [SerializeField] AudioClip[] sfxClips;
     [SerializeField] AudioClip[] bgmClips;
@@ -38,9 +59,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioSource bgmSource;
 
 
-    public void PlaySFX(ESfx sfx)
+    public void PlaySFX(ESfx sfx, float volume = 1f)
     {        
-        sfxSource.PlayOneShot(sfxClips[(int)sfx],1f);
+        sfxSource.PlayOneShot(sfxClips[(int)sfx], volume);
     }
 
     public void PlayBGM(EBgm bgm)
