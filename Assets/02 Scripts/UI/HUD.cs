@@ -153,7 +153,7 @@ public class HUD : MonoBehaviour
         if (isBig) bigText.text = "+Big!!!";
         if (score > 0) earnedScoreText.text = $"+{score}";
 
-        distanceText.text = $"{distance+50:F1}m";
+        if(distance>0)distanceText.text = $"{distance+50:F1}m";
         timingText.text = timing.ToString();
 
         // 홈런 알림 표시

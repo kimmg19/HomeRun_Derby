@@ -13,7 +13,7 @@ public class EventManager : MonoBehaviour
     {
         get
         {
-            if (instance == null)
+            if (instance == null && Time.timeScale!=0)
             {
                 var obj = FindAnyObjectByType<EventManager>();
                 if (obj != null)
@@ -96,4 +96,8 @@ public class EventManager : MonoBehaviour
          OnHitResult?.Invoke(isHomerun, d, t, s, c, b);
 
     public void PublishHitEffect(Transform hitPosition, EHitTiming timing) => OnHitEffect?.Invoke(hitPosition, timing);
+    void OnApplicationQuit()
+    {
+        Time.timeScale = 0;
+    }
 }
