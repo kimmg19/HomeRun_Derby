@@ -6,7 +6,7 @@ public class HitterHitState : IHitterState
 {
     public void Enter(HitterManager hitter)
     {
-        Debug.Log("Swing");
+        //Debug.LogError("Swing");
         hitter. animator.SetTrigger("Hit");
     }
 

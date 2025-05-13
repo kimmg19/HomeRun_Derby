@@ -1,10 +1,9 @@
 using UnityEngine;
 
-/// <summary>
-/// 점수 계산 로직만 담당하는 순수 클래스
-/// </summary>
-public class ScoreCalculator
+
+public class ScoreCalculator : MonoBehaviour
 {
+
     // 점수 계산 메서드
     public int CalculateScore(EHitTiming timing, float distance, bool isHomerun,
                              int baseScore, float distanceMultiplier,

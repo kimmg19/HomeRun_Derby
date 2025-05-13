@@ -4,7 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class GameOverPanel : MonoBehaviour
 {
-    
+    [SerializeField] GameObject recordPanel;
+    void Awake()
+    {
+        recordPanel.SetActive(false);
+    }
     public void RePlay()
     {
         LoadingSceneController.Instance.LoadScene("PlayGround");
@@ -16,7 +20,7 @@ public class GameOverPanel : MonoBehaviour
     }
     public void ShowRecord()
     {
-        print("±‚∑œ√¢");
+        recordPanel.SetActive(true);
     }
     public void GameExit()
     {

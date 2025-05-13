@@ -6,7 +6,7 @@ public class Ball : MonoBehaviour
     TrailRenderer trailRenderer;
     public EPitchPosition PitchPosition { get; set; }
     int speed;
-    bool isTriggerd;
+    [SerializeField]bool isTriggerd;
     Vector3 offset1;
     Vector3 offset2;
     Vector3 startPoint;
@@ -110,10 +110,10 @@ public class Ball : MonoBehaviour
             StopCoroutine(activeCoroutine);
         }
     }
-    void OnTriggerEnter(Collider other)
+    void OnTriggerExit(Collider other)
     {
-
         if (other.CompareTag("Zone") && !isTriggerd){
+
             isTriggerd = true;
             EventManager.Instance.PublishOnEnablePitchData(PitchPosition);
         }
