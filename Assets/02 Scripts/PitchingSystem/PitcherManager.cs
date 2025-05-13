@@ -73,12 +73,13 @@ public class PitcherManager : MonoBehaviour
 
         // 투구 위치 설정
         catchPoint = strikeZoneManager.SetPitchingPoint(PitchPosition);
-
+        
         // 구종 및 구속 설정
         this.pitchData = pitchData;
         finalSpeed = ballSpeedManager.SetBallSpeed(pitchData, difficulty);
+        ScoreManager.Instance.SetPitchRecord(PitchPosition, curPitchType, finalSpeed);
     }
-
+    
     // 투구 실행 - 애니메이션 이벤트나 상태에서 호출
     public void ExecutePitch()
     {
@@ -89,7 +90,6 @@ public class PitcherManager : MonoBehaviour
 
         // 공 정보 이벤트에 보냄-ui에서 표시.
         EventManager.Instance.PublishOnSetBallData(finalSpeed, PitchPosition, curPitchType.pitchType);
-
         // 투구 시작
         ball.Init(pitchData, PitchPosition, (int)finalSpeed, ball.transform.position, catchPoint);
         ball.Pitch();

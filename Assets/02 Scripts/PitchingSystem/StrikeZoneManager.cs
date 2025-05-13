@@ -27,11 +27,11 @@ public class StrikeZoneManager : MonoBehaviour
         switch (pitchPosition)
         {
             case EPitchPosition.STRIKE:
-                Debug.Log("스트라이크");
+                //Debug.Log("스트라이크");
                 return GetStrikePosition();
 
             case EPitchPosition.BALL:
-                Debug.Log("볼");
+                //Debug.Log("볼");
                 return GetBallPosition((BallZone)Random.Range(0, 4));
 
             default:

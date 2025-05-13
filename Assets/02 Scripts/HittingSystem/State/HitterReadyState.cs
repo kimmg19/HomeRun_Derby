@@ -6,7 +6,7 @@ public class HitterReadyState : IHitterState
 {
     public void Enter(HitterManager hitter)
     {
-        Debug.Log("레디");
+        //Debug.Log("레디");
         hitter.animator.SetTrigger("Ready");
     }
 

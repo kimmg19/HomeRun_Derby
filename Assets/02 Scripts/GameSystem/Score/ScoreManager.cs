@@ -1,8 +1,40 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
-/// <summary>
-/// Unity 라이프사이클 및 이벤트 처리를 담당하는 MonoBehaviour 클래스
-/// </summary>
+public struct HitRecord
+{
+    EHitTiming timing;
+    float distance;
+    int score;
+
+    public HitRecord(EHitTiming t, float d, int s)
+    {
+        this.timing = t;
+        this.distance = d;
+        this.score = s;
+    }
+    public float GetDistance() { return distance; }
+    public int GetScore() { return score; }
+    public EHitTiming GetTiming() { return timing; }
+}
+public struct PitchRecord
+{
+    EPitchPosition pitchPosition;
+    PitchTypeDataSO pitchTypeDataSO;
+    float speed;
+    public PitchRecord(EPitchPosition p, PitchTypeDataSO pSO, float s)
+    {
+        pitchPosition = p;
+        pitchTypeDataSO = pSO;
+        speed = s;
+    }
+    public EPitchPosition GetPitchPosition() { return pitchPosition; }
+    public PitchTypeDataSO GetPitchTypeDataSO() { return pitchTypeDataSO; }
+    public float GetSpeed() { return speed; }
+}
+
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
@@ -11,15 +43,17 @@ public class ScoreManager : MonoBehaviour
     [Header("점수 설정")]
     [SerializeField, ReadOnly] int baseScore = 1000;//기본 점수
     [SerializeField, ReadOnly] float distanceMultiplier = 2.0f;//비거리 계수
-    [SerializeField, ReadOnly] float homerunDistance = 50f;//홈런 비거리 기준
-    [SerializeField, ReadOnly] float longDistanceThreshold = 70f;//대형 홈런 추가점수 기준
+    [SerializeField, ReadOnly] float homerunDistance = 99f;//홈런 비거리 기준
+    [SerializeField, ReadOnly] float longDistanceThreshold = 130f;//대형 홈런 추가점수 기준
 
     // 점수 변수
     public int CurrentScore { get; set; }
     public int BestScore { get; set; }
-
-    // 계산기 인스턴스
     ScoreCalculator calculator;
+
+    Queue<HitRecord> hits = new Queue<HitRecord>();  //타격 기록 저장용 큐.
+    Queue<PitchRecord> pitches = new Queue<PitchRecord>();  //투구 기록 저장용 큐.
+
 
     void Awake()
     {
@@ -28,8 +62,8 @@ public class ScoreManager : MonoBehaviour
             Instance = this;
         else if (Instance != this)
             Destroy(gameObject);
-       
-        calculator = new ScoreCalculator();        
+
+        calculator = GetComponent<ScoreCalculator>();
         BestScore = PlayerPrefs.GetInt("BestScore", 0);
     }
 
@@ -43,31 +77,62 @@ public class ScoreManager : MonoBehaviour
         }
         else Debug.LogError("ScoreManager 이벤트 등록 실패");
     }
-
-    // 타격 처리 및 점수 계산- 타격 성공 시에만
-    void ProcessHit(EHitTiming timing, float distance,bool isCritical)
+    EHitTiming timing=EHitTiming.Miss;
+    float distance=0;
+    int score=0;
+    // 타격 처리 및 점수 계산
+    void ProcessHit(EHitTiming t, float d, bool isCritical)
     {
-        bool isHomerun = calculator.IsHomerun(distance, homerunDistance);   // 홈런 판정
-        bool isBighomerun=calculator.IsBigHomerun(distance, longDistanceThreshold);
+        
+        if (t == EHitTiming.Miss)
+        {
+            print("헛스윙");
+            EventManager.Instance.PublishHitResult(false, 0, t, 0, false, false);
+            SetHit(t, 0, 0);            
+            
+            return;
+        }
+        bool isHomerun = calculator.IsHomerun(d, homerunDistance);   // 홈런 판정
+        bool isBighomerun = calculator.IsBigHomerun(d, longDistanceThreshold);//대형홈런판정
         if (isHomerun || isBighomerun)
         {
-            SoundManager.Instance.PlaySFX(SoundManager.ESfx.Homerun,0.3f);
+            SoundManager.Instance.PlaySFX(SoundManager.ESfx.Homerun, 0.3f);
         }
-        int score = calculator.CalculateScore(                              // 점수 계산
-            timing, distance, isHomerun,
+        score = calculator.CalculateScore(                              // 점수 계산
+            t, d, isHomerun,
             baseScore, distanceMultiplier, longDistanceThreshold
         );
+        SetHit(t, d, score);
         // 타격 이벤트 발생-UI에 표시
-        EventManager.Instance.PublishHitResult(isHomerun, distance, timing,score,isCritical, isBighomerun);
-
+        EventManager.Instance.PublishHitResult(isHomerun, d, t, score, isCritical, isBighomerun);
+        
         // 점수 추가
-        AddScore(score);
+        AddScore(score);        
     }
-
+    void ResetHit()
+    {
+        timing=EHitTiming.Miss;
+        distance = 0;
+        score = 0;
+    }
+    public void SetHit(EHitTiming t, float d, int s)
+    {
+        timing = t; distance=d; score=s;        
+    }
+    public void SetHitRecord()
+    {
+        print(timing + "" + distance + "" + timing);
+        hits.Enqueue(new HitRecord(timing, distance, score));
+        ResetHit();
+    }
+    public void SetPitchRecord(EPitchPosition p, PitchTypeDataSO pSO, float speed)
+    {
+        pitches.Enqueue(new PitchRecord(p,pSO,speed));
+    }
     // 점수 추가
     void AddScore(int points)
     {
-        int lastScore=CurrentScore;
+        int lastScore = CurrentScore;
         CurrentScore += points;
 
         if (CurrentScore > BestScore)
@@ -75,9 +140,15 @@ public class ScoreManager : MonoBehaviour
             BestScore = CurrentScore;
         }
         EventManager.Instance.PublishScoreChanged(lastScore, CurrentScore);
-
     }
-
+    public Queue<HitRecord> GetHitRecord()
+    {
+        return new Queue<HitRecord>(hits);
+    }
+    public Queue<PitchRecord> GetPitchRecord()
+    {
+        return new Queue<PitchRecord>(pitches);
+    }
     // 점수 저장
     void SaveScore()
     {

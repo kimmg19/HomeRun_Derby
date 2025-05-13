@@ -18,10 +18,14 @@ public class HomerunDerbyManager : MonoBehaviour
     public EGameState GameState { get; set; }
     Coroutine pitchCoroutine;
     public Ball CurrentBall { get; set; } // 현재 투수가 던진 공
-    public int SwingCount { get; private set; } = 15;
+    public int SwingCount { get; private set; } = 5;
     [ReadOnly] public int currentDifficulty = 1;
     [SerializeField, ReadOnly] float pitchClock = 8;
-
+    void Awake()
+    {
+        if (Instance == null || Instance != this)
+            Instance = this;
+    }
     void OnEnable()
     {
         // 이벤트 구독
@@ -31,27 +35,27 @@ public class HomerunDerbyManager : MonoBehaviour
             EventManager.Instance.OnGameReady += GameIsReady;
             EventManager.Instance.OnGameFinished += GameFinished;
             EventManager.Instance.OnGameStart += TouchAndStart;
-            EventManager.Instance.OnBallSwing += DecreaseSwingCount;
+            EventManager.Instance.OnBallSwing += CallDecreaseSwingCount;
             EventManager.Instance.OnEnablePitchData += IsStrike;
+            EventManager.Instance.OnSwing += OnSwing;
         }
         else Debug.LogError("HomerunDerbyManager 이벤트 등록 실패");
     }
-    void Awake()
-    {
-        if (Instance == null || Instance != this)
-            Instance = this;
-    }
+
     void Start()
     {
         // 게임 시작 이벤트 발행
         EventManager.Instance.PublishGameReady();
     }
+    //카운트는 볼에 스윙 or 스트라이크 인 경우 감소. 
     void IsStrike(EPitchPosition pos)
     {
         if (pos == EPitchPosition.STRIKE)
-            DecreaseSwingCount();
+            CallDecreaseSwingCount();
     }
-    void DecreaseSwingCount()
+    void CallDecreaseSwingCount()=>StartCoroutine(DecreaseSwingCount());
+
+    IEnumerator DecreaseSwingCount()
     {
         SwingCount--;
         if (SwingCount > 9 && SwingCount <= 12) currentDifficulty = 2;
@@ -60,6 +64,8 @@ public class HomerunDerbyManager : MonoBehaviour
         else if (SwingCount <= 3) currentDifficulty = 5;
         // 변경된 값을 UI 등에 알림
         EventManager.Instance.PublishSwingCount(SwingCount);
+        yield return new WaitForSeconds(1f);//타격 데이터 set 할 때 까지 기다림.
+        ScoreManager.Instance.SetHitRecord();
     }
 
     IEnumerator StartPitching()
@@ -77,15 +83,19 @@ public class HomerunDerbyManager : MonoBehaviour
     // 터치 처리
     public void OnSwing()
     {
-        print("스윙 이벤트");
         //StartCoroutine(Swing());
-        var touch = Touchscreen.current.primaryTouch;
-        int fingerId = touch.touchId.ReadValue();
+        if (GameState == EGameState.Playing)
+        {
+            var touch = Touchscreen.current.primaryTouch;
+            int fingerId = touch.touchId.ReadValue();
+            //if (EventSystem.current.IsPointerOverGameObject(fingerId))
+            //{
+            //    Debug.LogError("UI 터치");
+            //    return;
+            //}
+            EventManager.Instance.PublishSwingStart();
 
-        if (EventSystem.current.IsPointerOverGameObject(fingerId)) {  return; }
-
-        if (GameState == EGameState.Playing) EventManager.Instance.PublishSwing();
-        
+        }
     }
 
     IEnumerator Swing()
@@ -99,13 +109,13 @@ public class HomerunDerbyManager : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject(fingerId)) { print("스윙2"); yield break; }
         print("스윙3");
 
-        if (GameState == EGameState.Playing) EventManager.Instance.PublishSwing();
+        if (GameState == EGameState.Playing) EventManager.Instance.PublishSwingStart();
         else print("스윙4");
     }
 
     void TouchAndStart()
     {
-        print("Game Start");
+        //print("Game Start");
         GameState = EGameState.Playing;
         pitchCoroutine = StartCoroutine(StartPitching());
     }
@@ -114,13 +124,13 @@ public class HomerunDerbyManager : MonoBehaviour
     {
         GameState = EGameState.Intro;
         SoundManager.Instance.PlayBGM(SoundManager.EBgm.Crowd);
-        print("Loading Complete");
+        //print("Loading Complete");
     }
 
     void GameFinished()
     {
         GameState = EGameState.Finish;
-        print("Finish");
+        //print("Finish");
     }
 
     void OnDisable()
@@ -128,10 +138,11 @@ public class HomerunDerbyManager : MonoBehaviour
         // 이벤트 구독 해제
         if (EventManager.Instance != null)
         {
-            EventManager.Instance.OnBallSwing -= DecreaseSwingCount;
+            EventManager.Instance.OnBallSwing -= CallDecreaseSwingCount;
             EventManager.Instance.OnGameReady -= GameIsReady;
             EventManager.Instance.OnGameFinished -= GameFinished;
             EventManager.Instance.OnGameStart -= TouchAndStart;
+            EventManager.Instance.OnSwing -= OnSwing;
 
         }
         else Debug.LogError("HomerunDerbyManager 이벤트 해제 실패");

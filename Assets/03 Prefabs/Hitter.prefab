@@ -420,7 +420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hittingPoint: {fileID: 2257633521027708432}
-  baseDistance: 40
+  baseDistance: 50
   maxHeight: 15
   playerManager: {fileID: 0}
   animator: {fileID: 0}

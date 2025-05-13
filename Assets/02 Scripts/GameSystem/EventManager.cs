@@ -13,7 +13,7 @@ public class EventManager : MonoBehaviour
     {
         get
         {
-            if (instance == null && Time.timeScale!=0)
+            if (instance == null && Time.timeScale != 0)
             {
                 var obj = FindAnyObjectByType<EventManager>();
                 if (obj != null)
@@ -40,9 +40,9 @@ public class EventManager : MonoBehaviour
         {
             Destroy(gameObject);
             return;
-        }        
+        }
         DontDestroyOnLoad(gameObject);
-        
+
     }
     public event Action OnReloadPlayGroud;
 
@@ -58,6 +58,7 @@ public class EventManager : MonoBehaviour
     public event Action<float, EPitchPosition, EPitchType> OnSetBallData;
 
     // 타자 관련 이벤트
+    public event Action OnSwing;
     public event Action OnSwingStart;
     public event Action<int> OnSwingCount;
     public event Action<EHitTiming, float, bool> OnBallHit;
@@ -68,7 +69,7 @@ public class EventManager : MonoBehaviour
     public event Action<bool, float, EHitTiming, int, bool, bool> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
 
     public event Action<Transform, EHitTiming> OnHitEffect;
-    
+
 
     public void PublishReloadPlayGround() => OnReloadPlayGroud?.Invoke();
 
@@ -85,7 +86,8 @@ public class EventManager : MonoBehaviour
     //타격
     public void PublishOnBallSwing() => OnBallSwing?.Invoke();
     public void PublishSwingCount(int count) => OnSwingCount?.Invoke(count);
-    public void PublishSwing() => OnSwingStart?.Invoke();
+    public void PublishOnSwing()=>OnSwing?.Invoke();
+    public void PublishSwingStart() => OnSwingStart?.Invoke();
     public void PublishBallHit(EHitTiming timing, float distance, bool isCritical) =>
         OnBallHit?.Invoke(timing, distance, isCritical);
 
