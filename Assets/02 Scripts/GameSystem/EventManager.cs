@@ -52,10 +52,10 @@ public class EventManager : MonoBehaviour
     public event Action OnGameStart;
 
     // 투수 관련 이벤트
-    public event Action<EPitchPosition> OnEnablePitchData;
+    public event Action<EPitchLocation> OnEnablePitchData;
     public event Action<int> OnPitchStart;
     public event Action OnWindUpStart;
-    public event Action<float, EPitchPosition, EPitchType> OnSetBallData;
+    public event Action<float, EPitchLocation, EPitchType> OnSetBallData;
 
     // 타자 관련 이벤트
     public event Action OnSwing;
@@ -78,10 +78,10 @@ public class EventManager : MonoBehaviour
     public void PublishGameStart() => OnGameStart?.Invoke();
     public void PublishGameFinished() => OnGameFinished?.Invoke();
     //투구
-    public void PublishOnEnablePitchData(EPitchPosition pos) => OnEnablePitchData?.Invoke(pos);
+    public void PublishOnEnablePitchData(EPitchLocation pos) => OnEnablePitchData?.Invoke(pos);
     public void PublishPitch(int currentDifficulty) => OnPitchStart?.Invoke(currentDifficulty);
     public void PublishWindUpStart() => OnWindUpStart?.Invoke();
-    public void PublishOnSetBallData(float speed, EPitchPosition position, EPitchType curPitchType) =>
+    public void PublishOnSetBallData(float speed, EPitchLocation position, EPitchType curPitchType) =>
        OnSetBallData?.Invoke(speed, position, curPitchType);
     //타격
     public void PublishOnBallSwing() => OnBallSwing?.Invoke();

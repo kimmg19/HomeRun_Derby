@@ -4,7 +4,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     TrailRenderer trailRenderer;
-    public EPitchPosition PitchPosition { get; set; }
+    public EPitchLocation PitchPosition { get; set; }
     int speed;
     [SerializeField]bool isTriggerd;
     Vector3 offset1;
@@ -18,7 +18,7 @@ public class Ball : MonoBehaviour
         trailRenderer = GetComponent<TrailRenderer>();        
     }
 
-    public void Init(IPitchData iPitchData, EPitchPosition pitchPosition, int speed, Vector3 startPoint, Vector3 endPoint)
+    public void Init(IPitchData iPitchData, EPitchLocation pitchPosition, int speed, Vector3 startPoint, Vector3 endPoint)
     {
         this.PitchPosition = pitchPosition;
         this.speed = speed;

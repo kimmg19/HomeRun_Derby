@@ -118,14 +118,14 @@ public class HUD : MonoBehaviour
     }
 
 
-    void GetPitchData(float speed, EPitchPosition position, EPitchType type)
+    void GetPitchData(float speed, EPitchLocation position, EPitchType type)
     {
         speedText.text = $"{speed:F1}KM";
         pitchPosText.text = position.ToString();
         pitchTypeText.text = type.ToString();
     }
 
-    void ShowPitchData(EPitchPosition p)
+    void ShowPitchData(EPitchLocation p)
     {
         pitchDataBox.SetActive(true);
         StartCoroutine(HideHitDataText(pitchDataBox));

@@ -22,15 +22,15 @@ public class StrikeZoneManager : MonoBehaviour
     /// </summary>
     /// <param name="pitchPosition">스트라이크/볼 여부</param>
     /// <returns>투구 목표 좌표</returns>
-    public Vector3 SetPitchingPoint(EPitchPosition pitchPosition)
+    public Vector3 SetPitchingPoint(EPitchLocation pitchPosition)
     {
         switch (pitchPosition)
         {
-            case EPitchPosition.STRIKE:
+            case EPitchLocation.STRIKE:
                 //Debug.Log("스트라이크");
                 return GetStrikePosition();
 
-            case EPitchPosition.BALL:
+            case EPitchLocation.BALL:
                 //Debug.Log("볼");
                 return GetBallPosition((BallZone)Random.Range(0, 4));
 

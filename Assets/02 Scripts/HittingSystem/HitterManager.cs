@@ -92,7 +92,7 @@ public class HitterManager : MonoBehaviour
         hitTiming = qualityEvaluator.EvaluateHitQuality(distanceFromHitPoint);
 
         // 볼 판정 타격 성공 여부 (선구안 영향)
-        if (currentBall.PitchPosition == EPitchPosition.BALL)
+        if (currentBall.PitchPosition == EPitchLocation.BALL)
         {
             EventManager.Instance.PublishOnBallSwing();
 

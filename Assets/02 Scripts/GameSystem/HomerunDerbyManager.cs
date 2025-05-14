@@ -18,9 +18,9 @@ public class HomerunDerbyManager : MonoBehaviour
     public EGameState GameState { get; set; }
     Coroutine pitchCoroutine;
     public Ball CurrentBall { get; set; } // 현재 투수가 던진 공
-    public int SwingCount { get; private set; } = 5;
+    public int SwingCount { get; private set; } = 15;
     [ReadOnly] public int currentDifficulty = 1;
-    [SerializeField, ReadOnly] float pitchClock = 8;
+    [SerializeField]float pitchClock = 7;
     void Awake()
     {
         if (Instance == null || Instance != this)
@@ -48,9 +48,9 @@ public class HomerunDerbyManager : MonoBehaviour
         EventManager.Instance.PublishGameReady();
     }
     //카운트는 볼에 스윙 or 스트라이크 인 경우 감소. 
-    void IsStrike(EPitchPosition pos)
+    void IsStrike(EPitchLocation pos)
     {
-        if (pos == EPitchPosition.STRIKE)
+        if (pos == EPitchLocation.STRIKE)
             CallDecreaseSwingCount();
     }
     void CallDecreaseSwingCount()=>StartCoroutine(DecreaseSwingCount());
@@ -64,14 +64,14 @@ public class HomerunDerbyManager : MonoBehaviour
         else if (SwingCount <= 3) currentDifficulty = 5;
         // 변경된 값을 UI 등에 알림
         EventManager.Instance.PublishSwingCount(SwingCount);
-        yield return new WaitForSeconds(1f);//타격 데이터 set 할 때 까지 기다림.
-        ScoreManager.Instance.SetHitRecord();
+        yield return new WaitForSeconds(0.5f);//타격 데이터 set 할 때 까지 기다림.
+        ScoreManager.Instance.SetRecord();
     }
 
     IEnumerator StartPitching()
     {
         while (SwingCount > 0 && GameState == EGameState.Playing)
-        {
+        {            
             EventManager.Instance.PublishPitch(currentDifficulty);
             yield return new WaitForSeconds(pitchClock);
         }
@@ -130,7 +130,6 @@ public class HomerunDerbyManager : MonoBehaviour
     void GameFinished()
     {
         GameState = EGameState.Finish;
-        //print("Finish");
     }
 
     void OnDisable()

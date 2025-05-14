@@ -7,7 +7,7 @@ public class GameOverPanel : MonoBehaviour
     [SerializeField] GameObject recordPanel;
     void Awake()
     {
-        recordPanel.SetActive(false);
+        recordPanel.SetActive(false);        
     }
     public void RePlay()
     {
@@ -21,6 +21,10 @@ public class GameOverPanel : MonoBehaviour
     public void ShowRecord()
     {
         recordPanel.SetActive(true);
+    }
+    public void HideRecord()
+    {
+        recordPanel.SetActive(false);
     }
     public void GameExit()
     {
