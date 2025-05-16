@@ -10,6 +10,6 @@ public class BatItemSO : ScriptableObject
 
     // Ω∫≈» ∫∏≥ Ω∫
     public float powerBonus;
-    public float eyeSightBonus;
+    public float judgementBonus;
     public float criticalBonus;
 }

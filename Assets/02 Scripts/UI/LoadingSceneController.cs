@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -6,22 +7,21 @@ using UnityEngine.UI;
 public class LoadingSceneController : MonoBehaviour
 {
     private static LoadingSceneController instance;
+
+    [SerializeField] CanvasGroup canvasGroup;
+    [SerializeField] Image progressBar;
+    [SerializeField] string loadSceneName;
+    [SerializeField] ToolTipSO tooltipSO;
+    [SerializeField] TextMeshProUGUI tooltipText;
     public static LoadingSceneController Instance
     {
-
         get
         {
             if (instance == null)
             {
                 var obj = FindAnyObjectByType<LoadingSceneController>();
-                if (obj != null)
-                {
-                    instance = obj;
-                }
-                else
-                {
-                    instance = Create();
-                }
+                if (obj != null) instance = obj;                
+                else instance = Create();                
             }
             return instance;
         }
@@ -38,42 +38,36 @@ public class LoadingSceneController : MonoBehaviour
         {
             Destroy(gameObject);
             return;
-        }        
+        }
         DontDestroyOnLoad(gameObject);
-        
+
     }
-    [SerializeField] CanvasGroup canvasGroup;
-    [SerializeField] Image progressBar;
-    [SerializeField] string loadSceneName;
+
     public void LoadScene(string sceneName)
     {
         gameObject.SetActive(true);
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        tooltipText.text = tooltipSO.GetToolTip();
+             SceneManager.sceneLoaded += OnSceneLoaded;
         loadSceneName = sceneName;
         StartCoroutine(LoadSceneProcess());
     }
 
     IEnumerator LoadSceneProcess()
     {
-        
-
         progressBar.fillAmount = 0f;
         yield return StartCoroutine(Fade(true));
-        AsyncOperation op=SceneManager.LoadSceneAsync(loadSceneName);
+        AsyncOperation op = SceneManager.LoadSceneAsync(loadSceneName);
         op.allowSceneActivation = false;
         float timer = 0f;
         while (!op.isDone)
         {
             yield return null;
-            if (op.progress < 0.9f)
-            {
-                progressBar.fillAmount=op.progress;
-            }
+            if (op.progress < 0.9f) progressBar.fillAmount = op.progress;            
             else
             {
                 timer += Time.unscaledDeltaTime;
-                progressBar.fillAmount = Mathf.Lerp(0.9f,1f,timer);
-                if(progressBar.fillAmount >= 1f)
+                progressBar.fillAmount = Mathf.Lerp(0.9f, 1f, timer);
+                if (progressBar.fillAmount >= 1f)
                 {
                     op.allowSceneActivation = true;
                     yield break;
@@ -100,10 +94,7 @@ public class LoadingSceneController : MonoBehaviour
             timer += Time.unscaledDeltaTime * 3f;
             canvasGroup.alpha = isFadeIn ? Mathf.Lerp(0f, 1f, timer) : Mathf.Lerp(1f, 0f, timer);
         }
-        if (!isFadeIn)
-        {
-            gameObject.SetActive(false);
-        }
+        if (!isFadeIn) gameObject.SetActive(false);        
     }
 }
 
