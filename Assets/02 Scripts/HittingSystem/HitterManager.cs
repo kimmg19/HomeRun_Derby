@@ -9,7 +9,7 @@ public class HitterManager : MonoBehaviour
     [SerializeField, Range(5f, 25f)] float maxHeight = 15f;
     float distanceCoefficient = 50f;//비거리 보정 +거리
     [Header("플레이어 스탯")]
-    [SerializeField] PlayerManager playerManager;
+    PlayerManager playerManager;
 
     // 공 참조
     Ball currentBall;
@@ -30,15 +30,13 @@ public class HitterManager : MonoBehaviour
 
     EHitTiming hitTiming;
     void Awake()
-    {
-        // 컴포넌트 초기화
-        animator = GetComponent<Animator>();
-
-        // 상태 객체 초기화
+    {      
+        
+        playerManager=FindAnyObjectByType<PlayerManager>();        
         hitterReadyState = new HitterReadyState();
         hitterHitReadyState = new HitterHitReadyState();
         hitterHitState = new HitterHitState();
-
+        animator = GetComponent<Animator>();
         trajectoryCalculator = GetComponent<HitTrajectoryCalculator>();
         qualityEvaluator = GetComponent<HitQualityEvaluator>();
         hitStatCalculator = GetComponent<HitStatCalculator>();
@@ -46,7 +44,7 @@ public class HitterManager : MonoBehaviour
         if (qualityEvaluator == null || trajectoryCalculator == null || hitStatCalculator == null)
         {
             Debug.LogError("Calculator Null!");
-        }
+        }        
     }
 
     void Start()
@@ -96,7 +94,7 @@ public class HitterManager : MonoBehaviour
         {
             EventManager.Instance.PublishOnBallSwing();
 
-            float eyeSight = GetPlayerStat(pm => pm.CurrentEyeSight);
+            float eyeSight = GetPlayerStat(pm => pm.CurrentJudgeSight);
 
             if (!hitStatCalculator.CheckBallHitSuccess(eyeSight))
             {

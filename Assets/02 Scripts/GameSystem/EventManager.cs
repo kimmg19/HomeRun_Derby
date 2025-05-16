@@ -1,9 +1,7 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// 기본 이벤트 시스템 - 게임 내 이벤트를 중앙에서 관리하는 매니저
-/// </summary>
+
 [DefaultExecutionOrder(-10000)]
 public class EventManager : MonoBehaviour
 {
@@ -44,46 +42,51 @@ public class EventManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
     }
-    public event Action OnReloadPlayGroud;
 
-    // 게임 상태 관련 이벤트
+    // 게임 상태 이벤트
     public event Action OnGameReady;
     public event Action OnGameFinished;
     public event Action OnGameStart;
 
-    // 투수 관련 이벤트
+    // 투수 이벤트
     public event Action<EPitchLocation> OnEnablePitchData;
     public event Action<int> OnPitchStart;
     public event Action OnWindUpStart;
     public event Action<float, EPitchLocation, EPitchType> OnSetBallData;
 
-    // 타자 관련 이벤트
+    // 타자 이벤트
     public event Action OnSwing;
     public event Action OnSwingStart;
     public event Action<int> OnSwingCount;
     public event Action<EHitTiming, float, bool> OnBallHit;
     public event Action OnBallSwing;
 
-    // 점수 관련 이벤트 추가
+    // 점수 및 UI 이벤트
     public event Action<int, int> OnScoreChanged;
     public event Action<bool, float, EHitTiming, int, bool, bool> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
 
+    //이펙트 이벤트
     public event Action<Transform, EHitTiming> OnHitEffect;
 
+    //플레이어 이벤트
+    public event Action<int, int, int> OnPlayerStatChanged;
 
-    public void PublishReloadPlayGround() => OnReloadPlayGroud?.Invoke();
 
-    // 게임
+    //===========================================================================================================//
+
+    // 게임 상태
     public void PublishGameReady() => OnGameReady?.Invoke();
     public void PublishGameStart() => OnGameStart?.Invoke();
     public void PublishGameFinished() => OnGameFinished?.Invoke();
+
     //투구
     public void PublishOnEnablePitchData(EPitchLocation pos) => OnEnablePitchData?.Invoke(pos);
     public void PublishPitch(int currentDifficulty) => OnPitchStart?.Invoke(currentDifficulty);
     public void PublishWindUpStart() => OnWindUpStart?.Invoke();
     public void PublishOnSetBallData(float speed, EPitchLocation position, EPitchType curPitchType) =>
        OnSetBallData?.Invoke(speed, position, curPitchType);
-    //타격
+
+    //타자
     public void PublishOnBallSwing() => OnBallSwing?.Invoke();
     public void PublishSwingCount(int count) => OnSwingCount?.Invoke(count);
     public void PublishOnSwing()=>OnSwing?.Invoke();
@@ -97,7 +100,16 @@ public class EventManager : MonoBehaviour
     public void PublishHitResult(bool isHomerun, float d, EHitTiming t, int s, bool c, bool b) =>
          OnHitResult?.Invoke(isHomerun, d, t, s, c, b);
 
-    public void PublishHitEffect(Transform hitPosition, EHitTiming timing) => OnHitEffect?.Invoke(hitPosition, timing);
+    //이펙트
+    public void PublishHitEffect(Transform hitPosition, EHitTiming timing) =>
+        OnHitEffect?.Invoke(hitPosition, timing);
+
+    //플레이어 이벤트
+    public void PublishPlayerStatsChanged(int power,int judge,int critical)=>
+        OnPlayerStatChanged?.Invoke(power, judge, critical);
+
+    //===========================================================================================================//
+
     void OnApplicationQuit()
     {
         Time.timeScale = 0;
