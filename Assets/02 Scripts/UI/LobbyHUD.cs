@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LobbyHUD : MonoBehaviour
 {
     [SerializeField] GameObject shopPanel;
-
+    
     void Awake()
     {
         shopPanel.SetActive(false);

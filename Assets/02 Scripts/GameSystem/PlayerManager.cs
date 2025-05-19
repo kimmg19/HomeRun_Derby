@@ -88,9 +88,9 @@ public class PlayerManager : MonoBehaviour
     public void Reset()
     {
         PlayerPrefs.SetInt("Currency", 100000);
-        PlayerPrefs.SetInt("PowerValue", 0);
-        PlayerPrefs.SetInt("JudgeValue", 0);
-        PlayerPrefs.SetInt("CriticalValue", 0);
+        PlayerPrefs.SetInt("PowerValue", 10);
+        PlayerPrefs.SetInt("JudgeValue", 10);
+        PlayerPrefs.SetInt("CriticalValue", 10);
         PlayerPrefs.SetInt("currentBatLevel", 0);
         PlayerPrefs.Save();
         LoadData();
