@@ -14,35 +14,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLevel: 10
   batLevelDatas:
-  - upgradeCost: 100
+  - upgradeCost: 500
     level: 1
     batMaterial: {fileID: 2100000, guid: 942f34e22ac2e0f449d41d859255a01e, type: 2}
     upgradeChance: 90
     powerBonus: 5
     judgementBonus: 5
     criticalBonus: 5
-  - upgradeCost: 200
+  - upgradeCost: 1000
     level: 2
     batMaterial: {fileID: 2100000, guid: 0c2ca16f3eff3e147867ef90edea1815, type: 2}
     upgradeChance: 80
     powerBonus: 10
     judgementBonus: 5
     criticalBonus: 5
-  - upgradeCost: 400
+  - upgradeCost: 2000
     level: 3
     batMaterial: {fileID: 2100000, guid: 4b3c44b05b0b6824f8a8ddfd3cc53743, type: 2}
     upgradeChance: 60
     powerBonus: 15
     judgementBonus: 10
     criticalBonus: 10
-  - upgradeCost: 1000
+  - upgradeCost: 3000
     level: 4
     batMaterial: {fileID: 2100000, guid: 795ccf2773b68114b89678573c1ab54d, type: 2}
     upgradeChance: 40
     powerBonus: 20
     judgementBonus: 10
     criticalBonus: 15
-  - upgradeCost: 2000
+  - upgradeCost: 4000
     level: 5
     batMaterial: {fileID: 2100000, guid: 947f30db4320a80449d238f928208741, type: 2}
     upgradeChance: 30

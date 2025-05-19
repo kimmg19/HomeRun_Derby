@@ -21,7 +21,7 @@ public class HomerunDerbyManager : MonoBehaviour
     public EGameState GameState { get; set; }
     Coroutine pitchCoroutine;
     public Ball CurrentBall { get; set; } // 현재 투수가 던진 공
-    public int SwingCount { get; set; } = 15;
+    public int SwingCount { get; set; } = 3;
     [ReadOnly] public int currentDifficulty = 1;
     [SerializeField] float pitchClock = 7;
     void Awake()

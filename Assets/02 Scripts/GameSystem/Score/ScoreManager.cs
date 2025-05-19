@@ -71,6 +71,7 @@ public class ScoreManager : MonoBehaviour
         {
             EventManager.Instance.OnBallHit += ProcessHit;
             EventManager.Instance.OnGameFinished += SaveScore;
+            EventManager.Instance.OnGameFinished += Reward;
             EventManager.Instance.OnGameReady += ResetScore;
         }
         else Debug.LogError("ScoreManager 이벤트 등록 실패");
@@ -156,7 +157,11 @@ public class ScoreManager : MonoBehaviour
         PlayerPrefs.SetInt("BestScore", BestScore);
         PlayerPrefs.Save();
     }
-
+    void Reward()
+    {
+        int rewardCurrency = CurrentScore / 100; 
+        PlayerManager.Instance.AddCurrency(rewardCurrency);
+    }
     // 점수 초기화
     void ResetScore()
     {
@@ -169,6 +174,7 @@ public class ScoreManager : MonoBehaviour
         {
             EventManager.Instance.OnBallHit -= ProcessHit;
             EventManager.Instance.OnGameFinished -= SaveScore;
+            EventManager.Instance.OnGameFinished -= Reward;
             EventManager.Instance.OnGameReady -= ResetScore;
         }
     }
