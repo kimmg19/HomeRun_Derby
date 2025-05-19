@@ -420,7 +420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hittingPoint: {fileID: 2257633521027708432}
-  baseDistance: 40
+  baseDistance: 50
   maxHeight: 15
   playerManager: {fileID: 0}
   animator: {fileID: 0}
@@ -1715,7 +1715,7 @@ SkinnedMeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6406925414689361704}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -1749,9 +1749,9 @@ SkinnedMeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   serializedVersion: 2
-  m_Quality: 0
+  m_Quality: 1
   m_UpdateWhenOffscreen: 0
-  m_SkinnedMotionVectors: 1
+  m_SkinnedMotionVectors: 0
   m_Mesh: {fileID: 2497106002754787046, guid: 71c18c86d62bd9840b30dbb680f7bc81, type: 3}
   m_Bones:
   - {fileID: 4450185366579157622}
@@ -2288,9 +2288,9 @@ SkinnedMeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   serializedVersion: 2
-  m_Quality: 0
+  m_Quality: 1
   m_UpdateWhenOffscreen: 0
-  m_SkinnedMotionVectors: 1
+  m_SkinnedMotionVectors: 0
   m_Mesh: {fileID: 6796121518194019630, guid: 71c18c86d62bd9840b30dbb680f7bc81, type: 3}
   m_Bones:
   - {fileID: 4450185366579157622}

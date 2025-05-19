@@ -19,7 +19,7 @@ public class PitcherManager : MonoBehaviour
     [SerializeField] Ball ball;
     Vector3 catchPoint;
     float finalSpeed;
-    public EPitchPosition PitchPosition { get; set; }
+    public EPitchLocation PitchPosition { get; set; }
     IPitchData pitchData;
     PitchTypeDataSO curPitchType;
     // 상태 관리
@@ -69,27 +69,28 @@ public class PitcherManager : MonoBehaviour
     {
         // 스트라이크/볼 결정
         PitchPosition = UnityEngine.Random.value < strikeChance ?
-            EPitchPosition.STRIKE : EPitchPosition.BALL;
+            EPitchLocation.STRIKE : EPitchLocation.BALL;
 
         // 투구 위치 설정
         catchPoint = strikeZoneManager.SetPitchingPoint(PitchPosition);
-
+        
         // 구종 및 구속 설정
         this.pitchData = pitchData;
         finalSpeed = ballSpeedManager.SetBallSpeed(pitchData, difficulty);
+        float calculatedFinalSpeed= Mathf.Floor(finalSpeed * 10f) / 10f;    //소수점 첫째자리까지
+        ScoreManager.Instance.SetPitchRecord(PitchPosition, pitchData.Type, finalSpeed);
     }
-
+    
     // 투구 실행 - 애니메이션 이벤트나 상태에서 호출
     public void ExecutePitch()
     {
-
+        SoundManager.Instance.PlaySFX(SoundManager.ESfx.Pitching,0.7f);
         // 공 생성 및 초기화
         ball = ObjectPoolManager.Instance.GetBall();
         HomerunDerbyManager.Instance.CurrentBall = ball;
 
         // 공 정보 이벤트에 보냄-ui에서 표시.
         EventManager.Instance.PublishOnSetBallData(finalSpeed, PitchPosition, curPitchType.pitchType);
-
         // 투구 시작
         ball.Init(pitchData, PitchPosition, (int)finalSpeed, ball.transform.position, catchPoint);
         ball.Pitch();
