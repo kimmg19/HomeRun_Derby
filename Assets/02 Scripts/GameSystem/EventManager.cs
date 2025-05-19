@@ -6,7 +6,7 @@ using UnityEngine;
 public class EventManager : MonoBehaviour
 {
     // 싱글톤 패턴 구현
-    private static EventManager instance;
+    static EventManager instance;
     public static EventManager Instance
     {
         get
@@ -34,13 +34,14 @@ public class EventManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance != null)
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
 
+        instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     // 게임 상태 이벤트
@@ -68,10 +69,10 @@ public class EventManager : MonoBehaviour
     //이펙트 이벤트
     public event Action<Transform, EHitTiming> OnHitEffect;
 
-    //플레이어 이벤트
+    //플레이어 및 상점 이벤트
     public event Action<int, int, int> OnPlayerStatChanged;
-
-
+    public event Action<int> OnCurrencyChanged;
+    public event Action<BatItemSO,int> OnBatUpgraded;
     //===========================================================================================================//
 
     // 게임 상태
@@ -89,7 +90,7 @@ public class EventManager : MonoBehaviour
     //타자
     public void PublishOnBallSwing() => OnBallSwing?.Invoke();
     public void PublishSwingCount(int count) => OnSwingCount?.Invoke(count);
-    public void PublishOnSwing()=>OnSwing?.Invoke();
+    public void PublishOnSwing() => OnSwing?.Invoke();
     public void PublishSwingStart() => OnSwingStart?.Invoke();
     public void PublishBallHit(EHitTiming timing, float distance, bool isCritical) =>
         OnBallHit?.Invoke(timing, distance, isCritical);
@@ -104,10 +105,11 @@ public class EventManager : MonoBehaviour
     public void PublishHitEffect(Transform hitPosition, EHitTiming timing) =>
         OnHitEffect?.Invoke(hitPosition, timing);
 
-    //플레이어 이벤트
-    public void PublishPlayerStatsChanged(int power,int judge,int critical)=>
+    //플레이어 및 상점 이벤트
+    public void PublishPlayerStatsChanged(int power, int judge, int critical) =>
         OnPlayerStatChanged?.Invoke(power, judge, critical);
-
+    public void PublishCurrencyChanged(int currency) => OnCurrencyChanged?.Invoke(currency);
+    public void PublishBatUpgraded(BatItemSO batItemSO,int level) => OnBatUpgraded?.Invoke(batItemSO,level);
     //===========================================================================================================//
 
     void OnApplicationQuit()

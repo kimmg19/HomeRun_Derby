@@ -1,10 +1,9 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
     // ½Ì±ÛÅæ ÆÐÅÏ ±¸Çö
-    private static SoundManager instance;
+    static SoundManager instance;
     public static SoundManager Instance
     {
         get
@@ -32,24 +31,25 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance != null)
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
             return;
         }
+        instance = this;
         DontDestroyOnLoad(gameObject);
 
     }
     public enum ESfx
     {
-        Hit=0,
+        Hit = 0,
         Homerun,
         Pitching,
         Swing
     }
     public enum EBgm
     {
-        Lobby=0,
+        Lobby = 0,
         Crowd
     }
     [SerializeField] AudioClip[] sfxClips;
@@ -60,7 +60,7 @@ public class SoundManager : MonoBehaviour
 
 
     public void PlaySFX(ESfx sfx, float volume = 1f)
-    {        
+    {
         sfxSource.PlayOneShot(sfxClips[(int)sfx], volume);
     }
 

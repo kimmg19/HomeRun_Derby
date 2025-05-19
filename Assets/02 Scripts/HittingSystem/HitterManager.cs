@@ -94,9 +94,9 @@ public class HitterManager : MonoBehaviour
         {
             EventManager.Instance.PublishOnBallSwing();
 
-            float eyeSight = GetPlayerStat(pm => pm.CurrentJudgeSight);
-
-            if (!hitStatCalculator.CheckBallHitSuccess(eyeSight))
+            float playerJudge = GetPlayerStat(pm => pm.CurrentJudgeSight);
+            print("선구 : "+playerJudge);
+            if (!hitStatCalculator.CheckBallHitSuccess(playerJudge))
             {
                 return;
             }
@@ -116,7 +116,8 @@ public class HitterManager : MonoBehaviour
     {        
         // 스탯 가져오기
         float power = GetPlayerStat(pm => pm.CurrentPower);
-        float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);        
+        float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);
+        print("파워 : "+power + "크리 : " +criticalChance);
         bool isCritical = hitStatCalculator.CheckCriticalHit(criticalChance);
         float angle = trajectoryCalculator.CalculateHitAngle(hitTiming);       
         float distance = hitStatCalculator.CalculateHitDistance(baseDistance, hitTiming, power, isCritical);

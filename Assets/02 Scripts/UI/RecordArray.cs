@@ -11,8 +11,7 @@ public class RecordArray : MonoBehaviour
     Queue<PitchRecord> pitchRecords;
     void OnEnable()
     {
-        EventManager.Instance.OnGameFinished += Record;
-        print("지금이야");
+        EventManager.Instance.OnGameFinished += Record;        
     }
     void OnDisable()
     {

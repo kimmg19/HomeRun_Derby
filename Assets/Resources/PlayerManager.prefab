@@ -45,4 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseStats: {fileID: 11400000, guid: d47cf933d9ded9d4bbee0efad337e5ef, type: 2}
-  defaultBat: {fileID: 11400000, guid: c650bba513955bf4aa2cd822c313cb11, type: 2}
+  currentBat: {fileID: 11400000, guid: c650bba513955bf4aa2cd822c313cb11, type: 2}
+  currency: 100000
+  currentBatLevel: 0
+  maxValue: 30
+  playerstat:
+    powerValue: 10
+    judgeValue: 10
+    criticalValue: 10

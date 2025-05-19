@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class LoadingSceneController : MonoBehaviour
 {
-    private static LoadingSceneController instance;
+    static LoadingSceneController instance;
 
     [SerializeField] CanvasGroup canvasGroup;
     [SerializeField] Image progressBar;
@@ -20,8 +20,8 @@ public class LoadingSceneController : MonoBehaviour
             if (instance == null)
             {
                 var obj = FindAnyObjectByType<LoadingSceneController>();
-                if (obj != null) instance = obj;                
-                else instance = Create();                
+                if (obj != null) instance = obj;
+                else instance = Create();
             }
             return instance;
         }
@@ -39,7 +39,11 @@ public class LoadingSceneController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
 
     }
 
@@ -47,7 +51,7 @@ public class LoadingSceneController : MonoBehaviour
     {
         gameObject.SetActive(true);
         tooltipText.text = tooltipSO.GetToolTip();
-             SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
         loadSceneName = sceneName;
         StartCoroutine(LoadSceneProcess());
     }
@@ -62,7 +66,7 @@ public class LoadingSceneController : MonoBehaviour
         while (!op.isDone)
         {
             yield return null;
-            if (op.progress < 0.9f) progressBar.fillAmount = op.progress;            
+            if (op.progress < 0.9f) progressBar.fillAmount = op.progress;
             else
             {
                 timer += Time.unscaledDeltaTime;
@@ -76,9 +80,9 @@ public class LoadingSceneController : MonoBehaviour
         }
     }
 
-    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    void OnSceneLoaded(Scene currentScene, LoadSceneMode none)
     {
-        if (arg0.name == loadSceneName)
+        if (currentScene.name == loadSceneName)
         {
             StartCoroutine(Fade(false));
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -94,7 +98,7 @@ public class LoadingSceneController : MonoBehaviour
             timer += Time.unscaledDeltaTime * 3f;
             canvasGroup.alpha = isFadeIn ? Mathf.Lerp(0f, 1f, timer) : Mathf.Lerp(1f, 0f, timer);
         }
-        if (!isFadeIn) gameObject.SetActive(false);        
+        if (!isFadeIn) gameObject.SetActive(false);
     }
 }
 
