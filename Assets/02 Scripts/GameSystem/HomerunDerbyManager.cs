@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public enum EGameState
@@ -13,18 +12,22 @@ public enum EGameState
 
 public class HomerunDerbyManager : MonoBehaviour
 {
-    public static HomerunDerbyManager Instance;
+    static HomerunDerbyManager instance;
+    public static HomerunDerbyManager Instance
+    {
+        get { return instance; }
+    }
 
     public EGameState GameState { get; set; }
     Coroutine pitchCoroutine;
     public Ball CurrentBall { get; set; } // 현재 투수가 던진 공
-    public int SwingCount { get; private set; } = 15;
+    public int SwingCount { get; set; } = 15;
     [ReadOnly] public int currentDifficulty = 1;
-    [SerializeField]float pitchClock = 7;
+    [SerializeField] float pitchClock = 7;
     void Awake()
     {
-        if (Instance == null || Instance != this)
-            Instance = this;
+        if (instance == null || instance != this)
+            instance = this;
     }
     void OnEnable()
     {
@@ -53,7 +56,7 @@ public class HomerunDerbyManager : MonoBehaviour
         if (pos == EPitchLocation.STRIKE)
             CallDecreaseSwingCount();
     }
-    void CallDecreaseSwingCount()=>StartCoroutine(DecreaseSwingCount());
+    void CallDecreaseSwingCount() => StartCoroutine(DecreaseSwingCount());
 
     IEnumerator DecreaseSwingCount()
     {
@@ -71,7 +74,7 @@ public class HomerunDerbyManager : MonoBehaviour
     IEnumerator StartPitching()
     {
         while (SwingCount > 0 && GameState == EGameState.Playing)
-        {            
+        {
             EventManager.Instance.PublishPitch(currentDifficulty);
             yield return new WaitForSeconds(pitchClock);
         }
@@ -88,31 +91,9 @@ public class HomerunDerbyManager : MonoBehaviour
         {
             var touch = Touchscreen.current.primaryTouch;
             int fingerId = touch.touchId.ReadValue();
-            //if (EventSystem.current.IsPointerOverGameObject(fingerId))
-            //{
-            //    Debug.LogError("UI 터치");
-            //    return;
-            //}
             EventManager.Instance.PublishSwingStart();
-
         }
     }
-
-    IEnumerator Swing()
-    {
-
-        //OnSwing()은 발동즉시 호출인데 이때 IsPointerOverGameObject는 업데이트 전일 수 있기에 한프레임 지나서 처리.
-        yield return null;
-        var touch = Touchscreen.current.primaryTouch;
-        int fingerId = touch.touchId.ReadValue();
-
-        if (EventSystem.current.IsPointerOverGameObject(fingerId)) { print("스윙2"); yield break; }
-        print("스윙3");
-
-        if (GameState == EGameState.Playing) EventManager.Instance.PublishSwingStart();
-        else print("스윙4");
-    }
-
     void TouchAndStart()
     {
         //print("Game Start");
@@ -124,7 +105,6 @@ public class HomerunDerbyManager : MonoBehaviour
     {
         GameState = EGameState.Intro;
         SoundManager.Instance.PlayBGM(SoundManager.EBgm.Crowd);
-        //print("Loading Complete");
     }
 
     void GameFinished()
@@ -142,7 +122,7 @@ public class HomerunDerbyManager : MonoBehaviour
             EventManager.Instance.OnGameFinished -= GameFinished;
             EventManager.Instance.OnGameStart -= TouchAndStart;
             EventManager.Instance.OnSwing -= OnSwing;
-
+            EventManager.Instance.OnEnablePitchData -= IsStrike;
         }
         else Debug.LogError("HomerunDerbyManager 이벤트 해제 실패");
 

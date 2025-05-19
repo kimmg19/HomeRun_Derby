@@ -119,9 +119,7 @@ public class ScoreManager : MonoBehaviour
         speed = s;
     }
     public void SetRecord()
-    {
-        print(timing + "" + distance + "" + score);
-        print(ePitchLocation + "" + ePitchType + "" + speed);
+    {        
         hits.Enqueue(new HitRecord(timing, distance, score));
         pitches.Enqueue(new PitchRecord(ePitchLocation, ePitchType, speed));
         ResetRecord();

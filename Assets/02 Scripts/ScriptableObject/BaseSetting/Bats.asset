@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2927ee3670d77443abfae985e6cf100, type: 3}
+  m_Name: Bats
+  m_EditorClassIdentifier: 
+  maxLevel: 10
+  batLevelDatas:
+  - upgradeCost: 100
+    level: 1
+    batMaterial: {fileID: 2100000, guid: 942f34e22ac2e0f449d41d859255a01e, type: 2}
+    upgradeChance: 90
+    powerBonus: 5
+    judgementBonus: 5
+    criticalBonus: 5
+  - upgradeCost: 200
+    level: 2
+    batMaterial: {fileID: 2100000, guid: 0c2ca16f3eff3e147867ef90edea1815, type: 2}
+    upgradeChance: 80
+    powerBonus: 10
+    judgementBonus: 5
+    criticalBonus: 5
+  - upgradeCost: 400
+    level: 3
+    batMaterial: {fileID: 2100000, guid: 4b3c44b05b0b6824f8a8ddfd3cc53743, type: 2}
+    upgradeChance: 60
+    powerBonus: 15
+    judgementBonus: 10
+    criticalBonus: 10
+  - upgradeCost: 1000
+    level: 4
+    batMaterial: {fileID: 2100000, guid: 795ccf2773b68114b89678573c1ab54d, type: 2}
+    upgradeChance: 40
+    powerBonus: 20
+    judgementBonus: 10
+    criticalBonus: 15
+  - upgradeCost: 2000
+    level: 5
+    batMaterial: {fileID: 2100000, guid: 947f30db4320a80449d238f928208741, type: 2}
+    upgradeChance: 30
+    powerBonus: 30
+    judgementBonus: 20
+    criticalBonus: 30
+  - upgradeCost: 5000
+    level: 6
+    batMaterial: {fileID: 2100000, guid: e6a229ede038ace4795f22d85f00937e, type: 2}
+    upgradeChance: 20
+    powerBonus: 50
+    judgementBonus: 20
+    criticalBonus: 30
+  - upgradeCost: 10000
+    level: 7
+    batMaterial: {fileID: 2100000, guid: 9b84d96edec3e074a96ccba10ae0bf43, type: 2}
+    upgradeChance: 15
+    powerBonus: 70
+    judgementBonus: 30
+    criticalBonus: 40
+  - upgradeCost: 25000
+    level: 8
+    batMaterial: {fileID: 2100000, guid: fd94c7d733fa0f04abca13c177eb2708, type: 2}
+    upgradeChance: 10
+    powerBonus: 80
+    judgementBonus: 40
+    criticalBonus: 40
+  - upgradeCost: 50000
+    level: 9
+    batMaterial: {fileID: 2100000, guid: e4e8da6a406bb454f90ef8a96e5daa8a, type: 2}
+    upgradeChance: 5
+    powerBonus: 100
+    judgementBonus: 50
+    criticalBonus: 50
+  - upgradeCost: 100000
+    level: 10
+    batMaterial: {fileID: 2100000, guid: 2b0f6b853af71784e9985f63ba6e750d, type: 2}
+    upgradeChance: 0
+    powerBonus: 200
+    judgementBonus: 50
+    criticalBonus: 50

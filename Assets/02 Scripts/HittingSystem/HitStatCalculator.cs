@@ -5,13 +5,8 @@ public class HitStatCalculator:MonoBehaviour
 {
     // 볼 타격 성공 확률 계산 (선구안 적용)
     public bool CheckBallHitSuccess(float eyeSight)
-    {
-        // 선구안 스탯이 높을수록 볼 타격 성공률 증가
-        float successRate = eyeSight / 100f;
-        // 최대 50% 제한
-        successRate = Mathf.Clamp(successRate, 0f, 0.5f);
-
-        return Random.value <= successRate;
+    {       
+        return Random.value * 100f <= eyeSight;
     }
 
     // 확률적 비거리 계산 (파워 스탯 적용)
@@ -60,6 +55,6 @@ public class HitStatCalculator:MonoBehaviour
     // 크리티컬 타격 확률 계산 (크리티컬 스탯 적용)
     public bool CheckCriticalHit(float criticalChance)
     {
-        return Random.value * 100f < criticalChance;
+        return Random.value * 100f <= criticalChance;
     }
 }
