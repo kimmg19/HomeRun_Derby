@@ -11,6 +11,7 @@ public struct PlayerStats
 [DefaultExecutionOrder(-10000)]
 public class PlayerManager : MonoBehaviour
 {
+    #region 싱글톤
     static PlayerManager instance;
     public static PlayerManager Instance
     {
@@ -38,7 +39,7 @@ public class PlayerManager : MonoBehaviour
         Debug.LogWarning("PlayerManager 생성");
         return Instantiate(Resources.Load<PlayerManager>("PlayerManager"));
     }
-
+    #endregion
     [Header("플레이어 정보")]
     [SerializeField] PlayerStatSO baseStats;
     [SerializeField] BatItemSO currentBat;
@@ -46,7 +47,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("플레이어 스탯")]
     [SerializeField] int maxValue = 30;
-    [SerializeField] PlayerStats playerstat;
+    [SerializeField,ReadOnly] PlayerStats playerstat;
 
     //재화 정보
     [SerializeField] int currency;//재화
@@ -108,15 +109,12 @@ public class PlayerManager : MonoBehaviour
     }
     void SaveData()
     {
-        print("데이터 저장");
-
         PlayerPrefs.SetInt("Currency", currency);
         PlayerPrefs.SetInt("PowerValue", PowerValue);
         PlayerPrefs.SetInt("JudgeValue", JudgeValue);
         PlayerPrefs.SetInt("CriticalValue", CriticalValue);
         PlayerPrefs.SetInt("currentBatLevel", currentBatLevel);
         PlayerPrefs.Save();
-
     }    
 
     public void Initialization()
@@ -177,7 +175,6 @@ public class PlayerManager : MonoBehaviour
 
         if ( currentBatLevel < currentBat.maxLevel)
         {
-            print(levelData.upgradeChance);
             if (Random.value * 100 <= levelData.upgradeChance)
             {
                 currentBatLevel++;

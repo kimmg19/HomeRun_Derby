@@ -44,6 +44,7 @@ public class EventManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    #region 이벤트
     // 게임 상태 이벤트
     public event Action OnGameReady;
     public event Action OnGameFinished;
@@ -73,8 +74,9 @@ public class EventManager : MonoBehaviour
     public event Action<int, int, int> OnPlayerStatChanged;
     public event Action<int> OnCurrencyChanged;
     public event Action<BatItemSO,int> OnBatUpgraded;
-    //===========================================================================================================//
+    #endregion
 
+    #region 이벤트 실행
     // 게임 상태
     public void PublishGameReady() => OnGameReady?.Invoke();
     public void PublishGameStart() => OnGameStart?.Invoke();
@@ -110,7 +112,7 @@ public class EventManager : MonoBehaviour
         OnPlayerStatChanged?.Invoke(power, judge, critical);
     public void PublishCurrencyChanged(int currency) => OnCurrencyChanged?.Invoke(currency);
     public void PublishBatUpgraded(BatItemSO batItemSO,int level) => OnBatUpgraded?.Invoke(batItemSO,level);
-    //===========================================================================================================//
+    #endregion
 
     void OnApplicationQuit()
     {
