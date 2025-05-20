@@ -10,8 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 460302a977492ea42b1f017d211fff69, type: 3}
-  m_Name: Quest
+  m_Name: HomerunQuest
   m_EditorClassIdentifier: 
   quest:
+    questID: 1
     questName: "\uD648\uB7F0\uCE58\uAE30"
-    questReward: 500
+    questReward: 1000
+    baseTargetValue: 10
+  questType: 0
+  targetValueIncrease: 10
