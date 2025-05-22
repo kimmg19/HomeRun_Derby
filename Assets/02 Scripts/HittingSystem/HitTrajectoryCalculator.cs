@@ -38,6 +38,7 @@ public class HitTrajectoryCalculator :MonoBehaviour
     // 타이밍에 따른 방향 계산
     public float CalculateHitAngle(EHitTiming timing)
     {
+        timing = EHitTiming.Perfect;
         switch (timing)
         {
             case EHitTiming.Perfect:
@@ -47,7 +48,7 @@ public class HitTrajectoryCalculator :MonoBehaviour
             case EHitTiming.Slow:
                 return Random.Range(10f, 45f);      // 오른쪽 방향
             default:
-                return 0f;
+                return -45f;
         }
     }
 }

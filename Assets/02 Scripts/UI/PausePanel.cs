@@ -5,9 +5,11 @@ public class PausePanel : MonoBehaviour
 {
     
     [SerializeField] GameObject pausePanel;
+    [SerializeField] GameObject settingPanel;
     void Awake()
     {
         pausePanel.SetActive(false);
+        settingPanel.SetActive(false);
     }
     public void OnPause()
     {
@@ -31,7 +33,7 @@ public class PausePanel : MonoBehaviour
     }
     public void OnSetting()
     {
-        print("¼³Á¤");
+        settingPanel.SetActive(true);
     }
     public void OnGameExit()
     {

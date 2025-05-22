@@ -11,7 +11,8 @@ public class HUD : MonoBehaviour
     [SerializeField] TextMeshProUGUI bestScoreText;     //총 최고점수
     [SerializeField] TextMeshProUGUI currentScoreText;  //총 현재점수
     [SerializeField] TextMeshProUGUI earnedScoreText;   //현재 타격으로 얻은 점수
-    [SerializeField] TextMeshProUGUI finalScoreText;   //현재 타격으로 얻은 점수
+    [SerializeField] TextMeshProUGUI finalScoreText;    // 타격으로 얻은 총 점수
+    [SerializeField] TextMeshProUGUI earnedCurrencyText;// 얻은 재화
 
     [Header("투구 정보")]
     [SerializeField] TextMeshProUGUI speedText;         //구속
@@ -24,6 +25,12 @@ public class HUD : MonoBehaviour
     [SerializeField] TextMeshProUGUI timingText;        //타격 타이밍
     [SerializeField] TextMeshProUGUI criticalText;      //크리 여부
     [SerializeField] TextMeshProUGUI bigText;
+
+    [Header("타자 정보")]
+    [SerializeField] TextMeshProUGUI powerStat;
+    [SerializeField] TextMeshProUGUI judgeStat;
+    [SerializeField] TextMeshProUGUI criticalStat;
+
 
     [Header("투구 및 타격 UI Obj")]
     [SerializeField] GameObject swingBtn;                   //스윙버튼-화면전체
@@ -98,6 +105,12 @@ public class HUD : MonoBehaviour
         gameOverText.SetActive(false);
         swingBtn.SetActive(false);
         InitDuringGame();
+
+        powerStat.text="파워: "+PlayerManager.Instance.CurrentPower.ToString();
+        judgeStat.text = "선구: " + PlayerManager.Instance.CurrentJudgeSight.ToString();
+        criticalStat.text = "크리: " + PlayerManager.Instance.CurrentCritical.ToString();
+
+        
     }
     public void OnIntroTextClicked()
     {
@@ -190,6 +203,8 @@ public class HUD : MonoBehaviour
         gameOverText.SetActive(false);
         gameOverPanel.SetActive(true);
         StartCoroutine(ScoreEffect(finalScoreText, 0, ScoreManager.Instance.CurrentScore));
+        StartCoroutine(ScoreEffect(earnedCurrencyText, 0, ScoreManager.Instance.RewardCurrency));
+
     }
     IEnumerator Fade()
     {

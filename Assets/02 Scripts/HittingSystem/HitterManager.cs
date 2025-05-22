@@ -1,3 +1,4 @@
+using Interfaces;
 using System;
 using UnityEngine;
 
@@ -5,11 +6,16 @@ public class HitterManager : MonoBehaviour
 {
     [Header("타격 설정")]
     [SerializeField] Transform hittingPoint;
-    [SerializeField] float baseDistance = 50f;
+    [SerializeField] float baseDistance = 30f;
     [SerializeField, Range(5f, 25f)] float maxHeight = 15f;
     float distanceCoefficient = 50f;//비거리 보정 +거리
-    [Header("플레이어 스탯")]
-    PlayerManager playerManager;
+
+    IHitterPlayerManager playerManager;
+
+    public void Initialize(IHitterPlayerManager playerManager)
+    {
+        this.playerManager = playerManager;
+    }
 
     // 공 참조
     Ball currentBall;
@@ -30,9 +36,8 @@ public class HitterManager : MonoBehaviour
 
     EHitTiming hitTiming;
     void Awake()
-    {      
-        
-        playerManager=FindAnyObjectByType<PlayerManager>();        
+    {
+
         hitterReadyState = new HitterReadyState();
         hitterHitReadyState = new HitterHitReadyState();
         hitterHitState = new HitterHitState();
@@ -44,7 +49,7 @@ public class HitterManager : MonoBehaviour
         if (qualityEvaluator == null || trajectoryCalculator == null || hitStatCalculator == null)
         {
             Debug.LogError("Calculator Null!");
-        }        
+        }
     }
 
     void Start()
@@ -75,7 +80,7 @@ public class HitterManager : MonoBehaviour
 
     }
 
-    float GetPlayerStat(Func<PlayerManager, float> statSelector, float defaultValue = 0f)
+    float GetPlayerStat(Func<IHitterPlayerManager, float> statSelector, float defaultValue = 0f)
     {
         return playerManager != null ? statSelector(playerManager) : defaultValue;
     }
@@ -83,7 +88,7 @@ public class HitterManager : MonoBehaviour
     // 타격 판정 및 결과 처리
     public void CheckHit()
     {
-        currentBall = HomerunDerbyManager.Instance.CurrentBall;        
+        currentBall = HomerunDerbyManager.Instance.CurrentBall;
         SoundManager.Instance.PlaySFX(SoundManager.ESfx.Swing);
         // 타이밍 판정
         float distanceFromHitPoint = hittingPoint.transform.position.z - currentBall.transform.position.z;
@@ -95,7 +100,7 @@ public class HitterManager : MonoBehaviour
             EventManager.Instance.PublishOnBallSwing();
 
             float playerJudge = GetPlayerStat(pm => pm.CurrentJudgeSight);
-            print("선구 : "+playerJudge);
+            //print("선구 : "+playerJudge);
             if (!hitStatCalculator.CheckBallHitSuccess(playerJudge))
             {
                 return;
@@ -113,18 +118,18 @@ public class HitterManager : MonoBehaviour
 
     // 타격 결과 처리
     void ProcessHit()
-    {        
+    {
         // 스탯 가져오기
         float power = GetPlayerStat(pm => pm.CurrentPower);
         float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);
-        print("파워 : "+power + "크리 : " +criticalChance);
+        //print("파워 : "+power + "크리 : " +criticalChance);
         bool isCritical = hitStatCalculator.CheckCriticalHit(criticalChance);
-        float angle = trajectoryCalculator.CalculateHitAngle(hitTiming);       
+        float angle = trajectoryCalculator.CalculateHitAngle(hitTiming);
         float distance = hitStatCalculator.CalculateHitDistance(baseDistance, hitTiming, power, isCritical);
-        float calculatedDistance = Mathf.Floor(distance * 10f) / 10f+ distanceCoefficient;//소수점 첫번째 까지만, +50
+        float calculatedDistance = Mathf.Floor(distance * 10f) / 10f + distanceCoefficient;//소수점 첫번째 까지만, +50
         // 타격 이벤트 발행
         EventManager.Instance.PublishBallHit(hitTiming, calculatedDistance, isCritical);
-        EventManager.Instance.PublishHitEffect(currentBall.transform,hitTiming);
+        EventManager.Instance.PublishHitEffect(currentBall.transform, hitTiming);
         SoundManager.Instance.PlaySFX(SoundManager.ESfx.Hit);
         // 공 궤적 제어점 계산
         Vector3 startPoint = currentBall.transform.position;

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using Interfaces;
 public class ShopUIManager : MonoBehaviour
 {
     [Header("Buttons")]
@@ -21,10 +21,13 @@ public class ShopUIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI batLevelText;
     [SerializeField] TextMeshProUGUI upgradeChanceText;
     [SerializeField] TextMeshProUGUI upgradeCostText;
+    [SerializeField] int upgradeCost;
+    IShopPlayerManager playerManager;
+    public void Initialize(IShopPlayerManager playerManager)
+    {
+        this.playerManager = playerManager;
+    }
 
-
-    PlayerManager playerManager;
-    [SerializeField]int upgradeCost;
     void Awake()
     {
         CheckNull(redistributionBtn, nameof(redistributionBtn));
@@ -40,7 +43,7 @@ public class ShopUIManager : MonoBehaviour
         CheckNull(batLevelText, nameof(batLevelText));
         CheckNull(upgradeChanceText, nameof(upgradeChanceText));
         CheckNull(upgradeCostText, nameof(upgradeCostText));
-        playerManager = FindAnyObjectByType<PlayerManager>();        
+               
     }
     void OnEnable()
     {

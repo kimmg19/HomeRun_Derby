@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SoundManager : MonoBehaviour
 {
@@ -56,7 +57,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioClip[] bgmClips;
 
     [SerializeField] AudioSource sfxSource;
-    [SerializeField] AudioSource bgmSource;
+    [SerializeField] AudioSource bgmSource;    
 
 
     public void PlaySFX(ESfx sfx, float volume = 1f)

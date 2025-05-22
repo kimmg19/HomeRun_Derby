@@ -1,3 +1,4 @@
+using Interfaces;
 using UnityEngine;
 
 [System.Serializable]
@@ -9,7 +10,7 @@ public struct PlayerStats
 }
 
 [DefaultExecutionOrder(-10000)]
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour, IHitterPlayerManager, IShopPlayerManager
 {
     #region 싱글톤
     static PlayerManager instance;
@@ -41,18 +42,17 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
     [Header("플레이어 정보")]
-    [SerializeField] PlayerStatSO baseStats;
-    [SerializeField] BatItemSO currentBat;
-    [SerializeField] int currentBatLevel;
+    [SerializeField, ReadOnly] PlayerStatSO baseStats;
+    [SerializeField, ReadOnly] BatItemSO currentBat;
+    [SerializeField, ReadOnly] int currentBatLevel;
 
     [Header("플레이어 스탯")]
-    [SerializeField] int maxValue = 30;
-    [SerializeField,ReadOnly] PlayerStats playerstat;
+    [SerializeField, ReadOnly] int maxValue = 60;
+    [SerializeField, ReadOnly] PlayerStats playerstat;
 
-    //재화 정보
-    [SerializeField] int currency;//재화
-    [SerializeField] int redistributionCost = 10000;     //재분배 비용
-    [SerializeField] int upgradeCost;
+    [Header("재화")]
+    [SerializeField, ReadOnly] int currency;//재화
+    [SerializeField, ReadOnly] int redistributionCost = 10000;     //재분배 비용
 
     BatLevelData levelData;
 
@@ -69,19 +69,19 @@ public class PlayerManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance != null && instance!=this)
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+
         LoadData();
         SetBatLevel();
     }
-    
+
     void SetBatLevel()
     {
         levelData = currentBat.GetBatData(currentBatLevel);
@@ -115,7 +115,7 @@ public class PlayerManager : MonoBehaviour
         PlayerPrefs.SetInt("CriticalValue", CriticalValue);
         PlayerPrefs.SetInt("currentBatLevel", currentBatLevel);
         PlayerPrefs.Save();
-    }    
+    }
 
     public void Initialization()
     {
@@ -124,7 +124,7 @@ public class PlayerManager : MonoBehaviour
         EventManager.Instance.PublishBatUpgraded(currentBat, currentBatLevel);
     }
 
-    
+
     public void SpendCurrency(int cost)
     {
         if (cost > currency) { print("잔약 부족"); return; }
@@ -173,7 +173,7 @@ public class PlayerManager : MonoBehaviour
         //if (!HasEnoughCurrency(levelData.upgradeCost)) return;
         SpendCurrency(levelData.upgradeCost);
 
-        if ( currentBatLevel < currentBat.maxLevel)
+        if (currentBatLevel < currentBat.maxLevel)
         {
             if (Random.value * 100 <= levelData.upgradeChance)
             {
@@ -188,7 +188,7 @@ public class PlayerManager : MonoBehaviour
     {
         return levelData.upgradeCost;
     }
-    
+
     public int GetredistributionCostCost()
     {
         return redistributionCost;
