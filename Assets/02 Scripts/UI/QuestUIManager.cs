@@ -47,7 +47,6 @@ public class QuestUIManager : MonoBehaviour
     // 처음 한 번만 호출 - UI 요소 생성
     void InitQuestUI()
     {
-        print("초기");
         List<RepeatableQuestSO> quests = QuestManager.Instance.GetAllQuests();
 
         for (int i = 0; i < quests.Count; i++)

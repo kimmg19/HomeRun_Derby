@@ -19,7 +19,7 @@ public class BezierTest : MonoBehaviour
     }
 
 }
-/*[CanEditMultipleObjects]
+[CanEditMultipleObjects]
 [CustomEditor(typeof(BezierTest))]
 public class BezierTest2 : Editor
 {
@@ -37,4 +37,4 @@ public class BezierTest2 : Editor
         Handles.DrawBezier(Generator.P1, Generator.P4, Generator.P2, Generator.P3, Color.white, null, 2f);
 
     }
-}*/
+}

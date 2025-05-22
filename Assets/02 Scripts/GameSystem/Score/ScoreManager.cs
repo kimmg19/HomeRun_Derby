@@ -48,8 +48,8 @@ public class ScoreManager : MonoBehaviour
     [Header("점수 설정")]
     [SerializeField, ReadOnly] int baseScore = 1000;         // 기본 점수
     [SerializeField, ReadOnly] float distanceMultiplier = 2.0f; // 비거리 계수
-    [SerializeField, ReadOnly] float homerunDistance = 99f;    // 홈런 비거리 기준
-    [SerializeField, ReadOnly] float longDistanceThreshold = 130f; // 대형 홈런 추가점수 기준
+    [SerializeField, ReadOnly] float homerunDistance = 90f;    // 홈런 비거리 기준
+    [SerializeField, ReadOnly] float longDistanceThreshold = 120f; // 대형 홈런 추가점수 기준
 
     // 게임 세션 통계 데이터
     [Header("세션 통계")]
@@ -59,6 +59,7 @@ public class ScoreManager : MonoBehaviour
 
     // 점수 프로퍼티
     public int CurrentScore { get; set; }
+    public int RewardCurrency { get; set; }
     public int BestScore { get; set; }
 
     // 타격 및 투구 기록 큐
@@ -178,8 +179,8 @@ public class ScoreManager : MonoBehaviour
     // 게임 종료 시 보상 지급
     void Reward()
     {
-        int rewardCurrency = CurrentScore / 100;
-        PlayerManager.Instance.AddCurrency(rewardCurrency);
+        RewardCurrency = CurrentScore / 100;
+        PlayerManager.Instance.AddCurrency(RewardCurrency);
     }
     #endregion
 

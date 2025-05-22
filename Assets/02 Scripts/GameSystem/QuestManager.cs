@@ -44,7 +44,7 @@ public class QuestManager : MonoBehaviour
     }
 
     void OnEnable()
-    {
+    {        
         // 게임 종료 시 퀘스트 진행도 업데이트
         if (EventManager.Instance != null)
         {
@@ -55,6 +55,7 @@ public class QuestManager : MonoBehaviour
 
     void OnDisable()
     {
+
         if (EventManager.Instance != null)
         {
             EventManager.Instance.OnGameFinished -= ProcessGameResults;

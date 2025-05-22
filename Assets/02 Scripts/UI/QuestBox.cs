@@ -49,13 +49,13 @@ public class QuestBox : MonoBehaviour
     }
 
     // 버튼 상태 업데이트
-    private void UpdateButtonState(bool isCompleted)
+    void UpdateButtonState(bool isCompleted)
     {
         completeButton.interactable = isCompleted;
     }
 
     // 퀘스트 완료 버튼 클릭 이벤트
-    private void OnCompleteQuest()
+    void OnCompleteQuest()
     {
         if (QuestManager.Instance != null)
         {

@@ -60,23 +60,23 @@ MonoBehaviour:
     level: 7
     batMaterial: {fileID: 2100000, guid: 9b84d96edec3e074a96ccba10ae0bf43, type: 2}
     upgradeChance: 15
-    powerBonus: 70
+    powerBonus: 75
     judgementBonus: 30
     criticalBonus: 40
   - upgradeCost: 25000
     level: 8
     batMaterial: {fileID: 2100000, guid: fd94c7d733fa0f04abca13c177eb2708, type: 2}
     upgradeChance: 10
-    powerBonus: 80
+    powerBonus: 100
     judgementBonus: 40
     criticalBonus: 40
   - upgradeCost: 50000
     level: 9
     batMaterial: {fileID: 2100000, guid: e4e8da6a406bb454f90ef8a96e5daa8a, type: 2}
     upgradeChance: 5
-    powerBonus: 100
-    judgementBonus: 50
-    criticalBonus: 50
+    powerBonus: 150
+    judgementBonus: 45
+    criticalBonus: 45
   - upgradeCost: 100000
     level: 10
     batMaterial: {fileID: 2100000, guid: 2b0f6b853af71784e9985f63ba6e750d, type: 2}

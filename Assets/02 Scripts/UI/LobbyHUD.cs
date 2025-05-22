@@ -5,11 +5,14 @@ public class LobbyHUD : MonoBehaviour
 {
     [SerializeField] GameObject shopPanel;
     [SerializeField] GameObject questPanel;
+    [SerializeField] GameObject settingPanel;
+
 
     void Awake()
     {
         shopPanel.SetActive(false);
         questPanel.SetActive(false);
+        settingPanel.SetActive(false);
     }
 
     // 게임시작 버튼 이벤트
