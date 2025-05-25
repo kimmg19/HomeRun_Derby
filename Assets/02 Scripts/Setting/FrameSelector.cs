@@ -7,7 +7,7 @@ public enum Frame
 {
     Low = 30,
     Middle = 60,
-    High = 120
+    Max = -1    // 무제한
 }
 
 public class FrameSelector : MonoBehaviour
@@ -28,20 +28,19 @@ public class FrameSelector : MonoBehaviour
 
     void Start()
     {
-        // 버튼 설정
         for (int i = 0; i < buttonMappings.Count; i++)
         {
             ButtonFrameMapping mapping = buttonMappings[i];
 
             // 텍스트 설정
-            mapping.button.GetComponentInChildren<TextMeshProUGUI>().text = ((int)mapping.Frame).ToString() + "FPS";
+            string buttonText = mapping.Frame == Frame.Max ? "MAX" : ((int)mapping.Frame).ToString() + "FPS";
+            mapping.button.GetComponentInChildren<TextMeshProUGUI>().text = buttonText;
 
             // 이벤트 등록
             Frame frame = mapping.Frame;
             Button btn = mapping.button;
-
             btn.onClick.AddListener(() => SelectedButtonUpdate(btn, frame));
-            
+
             // 현재 프레임 체크
             if (GameManager.Instance != null &&
                 (int)mapping.Frame == GameManager.Instance.CurrentFrameRate)
@@ -52,8 +51,7 @@ public class FrameSelector : MonoBehaviour
     }
 
     void OnEnable()
-    {       
-
+    {
         if (GameManager.Instance != null)
         {
             SyncSelection();
@@ -76,21 +74,17 @@ public class FrameSelector : MonoBehaviour
 
     void SelectedButtonUpdate(Button button, Frame frame, bool apply = true)
     {
-        // 중복 선택 무시
-        if (currentButton == button) {  return; };
+        if (currentButton == button) return;
 
-        // 이전 선택 초기화
         if (currentButton != null)
         {
             currentButton.GetComponent<Image>().color = normalColor;
         }
 
-        // 새 선택
         currentButton = button;
         currentFrame = frame;
         currentButton.GetComponent<Image>().color = selectedColor;
 
-        // 적용
         if (apply && GameManager.Instance != null)
         {
             GameManager.Instance.SetFrameRate((int)frame);

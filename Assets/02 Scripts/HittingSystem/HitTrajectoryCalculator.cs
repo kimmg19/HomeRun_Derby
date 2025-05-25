@@ -38,7 +38,6 @@ public class HitTrajectoryCalculator :MonoBehaviour
     // 타이밍에 따른 방향 계산
     public float CalculateHitAngle(EHitTiming timing)
     {
-        timing = EHitTiming.Perfect;
         switch (timing)
         {
             case EHitTiming.Perfect:

@@ -26,6 +26,11 @@ public class ShopUIManager : MonoBehaviour
     public void Initialize(IShopPlayerManager playerManager)
     {
         this.playerManager = playerManager;
+        redistributionCostText.text = playerManager.GetredistributionCostCost().ToString();
+        upgradeCost = playerManager.GetUpgradeCost();
+        upgradeCostText.text = upgradeCost.ToString();
+        playerManager.Initialization();
+        EnableBtn(0);
     }
 
     void Awake()
@@ -66,11 +71,7 @@ public class ShopUIManager : MonoBehaviour
     }
     void Start()
     {
-        redistributionCostText.text = playerManager.GetredistributionCostCost().ToString();
-        upgradeCost = playerManager.GetUpgradeCost();
-        upgradeCostText.text = upgradeCost.ToString();
-        playerManager.Initialization();
-        EnableBtn(0);        
+               
     }
 
     void CheckNull(Object obj, string name)
@@ -81,7 +82,7 @@ public class ShopUIManager : MonoBehaviour
     
     void PressRedistribution()
     {
-        playerManager.Redistribution();
+        playerManager?.Redistribution();
     }
     void PressUpgrade()
     {

@@ -4,7 +4,5 @@ using UnityEngine;
 
 public interface IHitterState
 {
-    void Enter(HitterManager hitter);
-    //void Update(HitterManager hitter);  
-    //void Exit(HitterManager hitter);
+    void Enter(HitterManager hitter);    
 }

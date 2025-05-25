@@ -7,7 +7,6 @@ public class LobbyHUD : MonoBehaviour
     [SerializeField] GameObject questPanel;
     [SerializeField] GameObject settingPanel;
 
-
     void Awake()
     {
         shopPanel.SetActive(false);
@@ -15,20 +14,27 @@ public class LobbyHUD : MonoBehaviour
         settingPanel.SetActive(false);
     }
 
-    // 게임시작 버튼 이벤트
     public void OnGameStart()
     {
         LoadingSceneController.Instance.LoadScene("PlayGround");
     }
 
-    // panel에 캔버스 그룹이 있다면 fader 효과 적용 없으면 그냥 킴
     public void ActiveWindow(GameObject panel)
     {
+        // shopPanel 활성화할 때 의존성 주입
+        if (panel == shopPanel)
+        {
+            var shopUIManager = panel.GetComponent<ShopUIManager>();
+            if (shopUIManager != null)
+            {
+                shopUIManager.Initialize(PlayerManager.Instance);
+            }
+        }
+
         CanvasGroup cg = panel.GetComponent<CanvasGroup>();
         if (cg != null)
         {
             panel.SetActive(true);
-            // 초기 설정: 보이지 않지만 활성화된 상태
             cg.alpha = 0f;
             cg.interactable = false;
             cg.blocksRaycasts = false;
@@ -45,14 +51,13 @@ public class LobbyHUD : MonoBehaviour
         CanvasGroup cg = panel.GetComponent<CanvasGroup>();
         if (cg != null)
         {
-            // 페이드 아웃 시작 시 상호작용 즉시 비활성화
             cg.interactable = false;
             cg.blocksRaycasts = false;
             StartCoroutine(Fader(cg, false));
         }
         else
         {
-            panel.SetActive(false); // 이 부분 수정 (false로 변경)
+            panel.SetActive(false);
         }
     }
 
@@ -66,16 +71,13 @@ public class LobbyHUD : MonoBehaviour
             cg.alpha = isFadeIn ? Mathf.Lerp(0f, 1f, timer) : Mathf.Lerp(1f, 0f, timer);
         }
 
-        // 애니메이션 완료 후 처리
         if (isFadeIn)
         {
-            // 페이드 인 완료 시 상호작용 활성화
             cg.interactable = true;
             cg.blocksRaycasts = true;
         }
         else
         {
-            // 페이드 아웃 완료 시 패널 비활성화
             cg.gameObject.SetActive(false);
         }
     }

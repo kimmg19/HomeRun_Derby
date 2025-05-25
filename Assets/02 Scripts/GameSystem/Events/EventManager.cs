@@ -54,18 +54,18 @@ public class EventManager : MonoBehaviour
     public event Action<EPitchLocation> OnEnablePitchData;
     public event Action<int> OnPitchStart;
     public event Action OnWindUpStart;
-    public event Action<float, EPitchLocation, EPitchType> OnSetBallData;
+    public event Action<BallData> OnSetBallData;
 
     // 타자 이벤트
     public event Action OnSwing;
     public event Action OnSwingStart;
     public event Action<int> OnSwingCount;
-    public event Action<EHitTiming, float, bool> OnBallHit;
+    public event Action<BallHitData> OnBallHit;
     public event Action OnBallSwing;
 
     // 점수 및 UI 이벤트
     public event Action<int, int> OnScoreChanged;
-    public event Action<bool, float, EHitTiming, int, bool, bool> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
+    public event Action<HitResultData> OnHitResult; // 홈런 결과 (홈런 여부, 거리, 타이밍)
 
     //이펙트 이벤트
     public event Action<Transform, EHitTiming> OnHitEffect;
@@ -87,7 +87,7 @@ public class EventManager : MonoBehaviour
     public void PublishPitch(int currentDifficulty) => OnPitchStart?.Invoke(currentDifficulty);
     public void PublishWindUpStart() => OnWindUpStart?.Invoke();
     public void PublishOnSetBallData(float speed, EPitchLocation position, EPitchType curPitchType) =>
-       OnSetBallData?.Invoke(speed, position, curPitchType);
+        OnSetBallData?.Invoke(new BallData(speed, position, curPitchType));
 
     //타자
     public void PublishOnBallSwing() => OnBallSwing?.Invoke();
@@ -95,13 +95,13 @@ public class EventManager : MonoBehaviour
     public void PublishOnSwing() => OnSwing?.Invoke();
     public void PublishSwingStart() => OnSwingStart?.Invoke();
     public void PublishBallHit(EHitTiming timing, float distance, bool isCritical) =>
-        OnBallHit?.Invoke(timing, distance, isCritical);
+        OnBallHit?.Invoke(new BallHitData(timing, distance, isCritical));
 
     // 점수 및 UI
     public void PublishScoreChanged(int currentScore, int targetScore) =>
         OnScoreChanged?.Invoke(currentScore, targetScore);
     public void PublishHitResult(bool isHomerun, float d, EHitTiming t, int s, bool c, bool b) =>
-         OnHitResult?.Invoke(isHomerun, d, t, s, c, b);
+         OnHitResult?.Invoke(new HitResultData(isHomerun,d,t,s,c,b));
 
     //이펙트
     public void PublishHitEffect(Transform hitPosition, EHitTiming timing) =>
