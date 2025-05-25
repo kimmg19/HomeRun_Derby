@@ -77,6 +77,7 @@ public class Ball : MonoBehaviour
         Vector3 offset2,
         Vector3 endPoint)
     {
+
         // 기존 투구 코루틴 중지
         CheckCoroutine();
         gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);

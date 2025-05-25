@@ -119,6 +119,7 @@ public class HitterManager : MonoBehaviour
     // 타격 결과 처리
     void ProcessHit()
     {
+
         // 스탯 가져오기
         float power = GetPlayerStat(pm => pm.CurrentPower);
         float criticalChance = GetPlayerStat(pm => pm.CurrentCritical);

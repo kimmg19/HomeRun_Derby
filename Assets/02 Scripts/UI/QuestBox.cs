@@ -59,14 +59,19 @@ public class QuestBox : MonoBehaviour
     {
         if (QuestManager.Instance != null)
         {
+
             QuestManager.Instance.CompleteQuest(QuestID);
 
             // 완료 후 데이터 업데이트
             RepeatableQuestSO quest = QuestManager.Instance.GetQuestByID(QuestID);
+
             if (quest != null)
             {
+
                 UpdateData(quest.CurrentProgress, quest.CurrentTarget);
+
             }
-        }
+
+        }        
     }
 }
