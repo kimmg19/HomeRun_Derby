@@ -58,6 +58,8 @@ public class ShopUIManager : MonoBehaviour
         EventManager.Instance.OnBatUpgraded += UpgradeUI;
         redistributionBtn.onClick.AddListener(PressRedistribution);
         upgradeBtn.onClick.AddListener(PressUpgrade);
+        playerManager.Initialization();
+
     }
     void OnDisable()
     {
@@ -69,10 +71,7 @@ public class ShopUIManager : MonoBehaviour
         upgradeBtn.onClick.RemoveListener(PressUpgrade);
         
     }
-    void Start()
-    {
-               
-    }
+   
 
     void CheckNull(Object obj, string name)
     {

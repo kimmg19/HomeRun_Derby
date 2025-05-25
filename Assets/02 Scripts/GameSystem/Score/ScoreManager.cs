@@ -117,6 +117,7 @@ public class ScoreManager : MonoBehaviour
     // 타격 처리 및 점수 계산
     void ProcessHit(BallHitData hitData)
     {
+
         bool isHomerun = calculator.IsHomerun(hitData.distance, homerunDistance);
         bool isBighomerun = calculator.IsBigHomerun(hitData.distance, longDistanceThreshold);
         float distance = hitData.distance;

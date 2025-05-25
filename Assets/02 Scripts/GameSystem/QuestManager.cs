@@ -144,6 +144,7 @@ public class QuestManager : MonoBehaviour
     /// </summary>
     public void CompleteQuest(string questID)
     {
+        
         if (questProgress.TryGetValue(questID, out RepeatableQuestSO quest))
         {
             if (quest.CurrentState == QuestState.Completed)
