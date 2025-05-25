@@ -144,7 +144,6 @@ public class HitterManager : MonoBehaviour
     // 상태 변경 메소드
     void ChangeState(IHitterState newState)
     {
-        //currentState?.Exit(this);
         currentState = newState;
         currentState?.Enter(this);
     }

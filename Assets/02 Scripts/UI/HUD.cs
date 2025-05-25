@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
+    StringBuilder sb = new StringBuilder(32);
     [Header("시스템 텍스트")]
     [SerializeField] TextMeshProUGUI swingChanceText;   //스윙 기회
     [SerializeField] TextMeshProUGUI bestScoreText;     //총 최고점수
@@ -131,11 +133,11 @@ public class HUD : MonoBehaviour
     }
 
 
-    void GetPitchData(float speed, EPitchLocation position, EPitchType type)
+    void GetPitchData(BallData ballData)
     {
-        speedText.text = $"{speed:F1}KM";
-        pitchPosText.text = position.ToString();
-        pitchTypeText.text = type.ToString();
+        speedText.text = $"{ballData.speed:F1}KM";
+        pitchPosText.text = ballData.position.ToString();
+        pitchTypeText.text = ballData.pitchType.ToString();
     }
 
     void ShowPitchData(EPitchLocation p)
@@ -145,21 +147,21 @@ public class HUD : MonoBehaviour
     }
 
     // 타격 결과 표시
-    void ShowHitResult(bool isHomerun, float distance, EHitTiming timing, int score, bool isCritical, bool isBig)
+    void ShowHitResult(HitResultData hitData)
     {
-        if (isCritical) criticalText.text = "+Critical!!";
-        if (isBig) bigText.text = "+Big!!!";
-        if (score > 0) earnedScoreText.text = $"+{score}";
+        if (hitData.isCritical) criticalText.text = "+Critical!!";
+        if (hitData.isBigHomerun) bigText.text = "+Big!!!";
+        if (hitData.score > 0) earnedScoreText.text = $"+{hitData.score}";
 
-        distanceText.text = $"{distance}m";
-        timingText.text = timing.ToString();
+        distanceText.text = $"{hitData.distance}m";
+        timingText.text = hitData.timing.ToString();
 
         // 홈런 알림 표시
-        if (timing == EHitTiming.Miss)
+        if (hitData.timing == EHitTiming.Miss)
         {
             homerunText.text = "OOPS!!";
         }
-        else if (isHomerun)
+        else if (hitData.isHomerun)
         {
             homerunText.color = Color.red;
             homerunText.text = "HOMERUN!!!!";

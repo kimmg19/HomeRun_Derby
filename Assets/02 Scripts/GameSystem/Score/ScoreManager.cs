@@ -115,38 +115,40 @@ public class ScoreManager : MonoBehaviour
 
     #region 점수 관리
     // 타격 처리 및 점수 계산
-    void ProcessHit(EHitTiming t, float d, bool isCritical)
+    void ProcessHit(BallHitData hitData)
     {
-        if (t == EHitTiming.Miss)
+        bool isHomerun = calculator.IsHomerun(hitData.distance, homerunDistance);
+        bool isBighomerun = calculator.IsBigHomerun(hitData.distance, longDistanceThreshold);
+        float distance = hitData.distance;
+        EHitTiming timing = hitData.timing;
+        bool isCritical=hitData.isCritical;
+        if (timing == EHitTiming.Miss)
         {
-            EventManager.Instance.PublishHitResult(false, 0, t, 0, false, false);
-            SetHitRecord(t, 0, 0);
+            EventManager.Instance.PublishHitResult(false, 0, timing, 0, false, false);
+            SetHitRecord(timing, 0, 0);
             return;
         }
-
-        bool isHomerun = calculator.IsHomerun(d, homerunDistance);
-        bool isBighomerun = calculator.IsBigHomerun(d, longDistanceThreshold);
-
+        
         if (isHomerun || isBighomerun)
         {
             SoundManager.Instance.PlaySFX(SoundManager.ESfx.Homerun, 0.3f);
             sessionHomerunCount++; // 홈런 개수 증가
         }
 
-        if (t == EHitTiming.Perfect)
+        if (timing == EHitTiming.Perfect)
         {
             sessionPerfectHits++; // 퍼펙트 타이밍 개수 증가
         }
 
-        sessionTotalDistance += d; // 총 비거리 누적
+        sessionTotalDistance += distance; // 총 비거리 누적
 
         score = calculator.CalculateScore(
-            t, d, isHomerun,
+            timing, distance, isHomerun,
             baseScore, distanceMultiplier, longDistanceThreshold
         );
 
-        SetHitRecord(t, d, score);
-        EventManager.Instance.PublishHitResult(isHomerun, d, t, score, isCritical, isBighomerun);
+        SetHitRecord(timing, distance, score);
+        EventManager.Instance.PublishHitResult(isHomerun, distance, timing, score, isCritical, isBighomerun);
         AddScore(score);
     }
 

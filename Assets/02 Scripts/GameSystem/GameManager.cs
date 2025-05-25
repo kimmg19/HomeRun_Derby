@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
     void Init()
     {
         // 설정 로드
